@@ -1,6 +1,8 @@
 package CaptureScreenShot;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -10,19 +12,28 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
-class CaptureScreenShotTest {
-    @Test
-    void takeScreenShotTest() {
-        // create directory if not exists
-        File directory = new File("test_pic");
-        if (!directory.exists()) {
-            directory.mkdir();
+
+public class CaptureScreenShotTest {
+    public static boolean setUpDone= false;
+    @Before
+    public  void setUp() {
+
+        if(!setUpDone) {
+            // create directory if not exists
+            File directory = new File("test_pic");
+            if (!directory.exists()) {
+                directory.mkdir();
+            }
+            // delete all files in test_pic directory
+            Util.Util.deleteFiles(new File("test_pic"));
         }
-        // delete all files in test_pic directory
-        Util.Util.deleteFiles(new File("test_pic"));
+        setUpDone = true;
+    }
 
+    @Test
+    public void takeScreenShotTest() {
         CaptureScreenShot captureScreenShot =
                 new CaptureScreenShot(
                         new Rectangle(
@@ -46,14 +57,8 @@ class CaptureScreenShotTest {
     }
 
     @Test
-    void takeScreenShotTest_static() {
-        // create directory if not exists
-        File directory = new File("test_pic");
-        if (!directory.exists()) {
-            directory.mkdir();
-        }
-        // delete all files in test_pic directory
-        Util.Util.deleteFiles(new File("test_pic"));
+    public void takeScreenShotTest_static() {
+
         try {
             BufferedImage bufferedImage = CaptureScreenShot.takeScreenShot(
                     new Rectangle(
@@ -63,7 +68,7 @@ class CaptureScreenShotTest {
             ImageIO.write(bufferedImage, "jpg", new File("test_pic/takeScreenShotTest_static_Result.jpg"));
         } catch (AWTException e) {
             e.printStackTrace();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
