@@ -1,5 +1,4 @@
-package Mouse;
-import java.awt.*;
+package MousePosition;
 
 public class ReadMousePosition implements Runnable{
 

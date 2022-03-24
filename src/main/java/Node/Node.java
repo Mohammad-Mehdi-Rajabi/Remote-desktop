@@ -1,13 +1,12 @@
 package Node;
 
+import java.io.IOException;
+
 public abstract class Node {
 
     private int port;
 
-    public void isStablished(){
-    }
+    public abstract void established() throws IOException;
 
-    public boolean state(){
-        return true;
-    }
+    public abstract boolean state() throws IOException;
 }

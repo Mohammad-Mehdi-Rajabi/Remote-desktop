@@ -5,52 +5,82 @@ import java.io.*;
 
 public class Client extends Node {
 
-    // initialize socket and input output streams
-    private String ip;
-    private Socket socket                      = null;
-    private DataInputStream dataInputStream    = null;
-    private DataOutputStream dataOutputStream  = null;
+    private Socket socket = null;
+    private InputStream inputStream = null;
+    private OutputStream outputStream = null;
+    private int port;
+    private String address;
 
-    // constructor to put ip address and port
-    public Client(String address, int port)
-    {
-        // establish a connection
-        try
-        {
-            socket = new Socket(address, port);
-            System.out.println("Connected");
-
-            // takes input from terminal
-            dataInputStream  = new DataInputStream(System.in);
-
-            // sends output to the socket
-            dataOutputStream    = new DataOutputStream(socket.getOutputStream());
-        }
-        catch(UnknownHostException unknownHostException)
-        {
-            System.out.println(unknownHostException);
-        }
-        catch(IOException ioException)
-        {
-            System.out.println(ioException);
-        }
-
-        // close the connection
-        try
-        {
-            dataInputStream.close();
-            dataOutputStream.close();
-            socket.close();
-        }
-        catch(IOException i)
-        {
-            System.out.println(i);
-        }
+    public Client(String address, int port) {
+        this.address = address;
+        this.port = port;
     }
-/*
-        public static void main(String args[])
-        {
-            Client client = new Client("127.0.0.1", 5000);
+
+    public Client(Socket socket) {
+        this.socket = socket;
+    }
+
+    @Override
+    public void established() throws IOException {
+        if (socket == null) {
+            socket = new Socket(address, port);
+        } else {
+            this.address = "";
+            this.port = this.socket.getLocalPort();
+            byte[] ip = this.socket.getInetAddress().getAddress();
+            for (byte b : ip) {
+                this.address += b;
+            }
         }
-*/
+        this.inputStream = socket.getInputStream();
+
+        this.outputStream = socket.getOutputStream();
+    }
+
+    @Override
+    public boolean state() throws IOException {
+
+        return this.socket.getInetAddress().isReachable(2000);
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+
+    public void setInputStream(InputStream inputStream) {
+        this.inputStream = inputStream;
+    }
+
+    public OutputStream getOutputStream() {
+        return outputStream;
+    }
+
+    public void setOutputStream(OutputStream outputStream) {
+        this.outputStream = outputStream;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 }
+

@@ -42,6 +42,16 @@ public class Server extends Node {
         }
     }
 
+    @Override
+    public void established() throws IOException {
+
+    }
+
+    @Override
+    public boolean state() {
+        return false;
+    }
+
     /*
     public static void main(String args[])
     {

@@ -1,4 +1,4 @@
-package Mouse;
+package MousePosition;
 
 import java.awt.*;
 
@@ -18,7 +18,7 @@ public class SendMousePosition implements Runnable{
             Point mouseCursor = MouseInfo.getPointerInfo().getLocation();
             xCordinate = mouseCursor.getX();
             yCordinate = mouseCursor.getY();
-            MousePosition mousePosition = new MousePosition(xCordinate, yCordinate);
+           //MousePosition mousePosition = new MousePosition(xCordinate, yCordinate);
         }
     }
 }
