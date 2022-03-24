@@ -3,11 +3,17 @@ package MousePosition;
 import java.awt.*;
 import java.io.Serializable;
 
+/**
+ * this class calculate mouse position
+ */
 public class MousePosition implements Serializable {
 
     private double X;
     private double Y;
 
+    /**
+     * when create class constructor initialized x and y fields
+     */
     public MousePosition() {
         Point location = MouseInfo.getPointerInfo().getLocation();
         this.X= location.getX();
