@@ -1,7 +1,5 @@
-package CaptureScreenShot;
+package Core.CaptureScreenShot;
 
-
-import javafx.scene.image.Image;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

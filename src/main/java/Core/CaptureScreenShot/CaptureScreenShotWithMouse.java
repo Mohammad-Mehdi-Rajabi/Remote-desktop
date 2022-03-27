@@ -1,18 +1,17 @@
-package CaptureScreenShot;
+package Core.CaptureScreenShot;
 
 
-import MousePosition.MousePosition;
+import Core.MousePosition.MousePosition;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * this class take an screenshot with mouse pointer
  */
-public class ScreenShotWithMouse {
+public class CaptureScreenShotWithMouse {
     public static BufferedImage bufferedImage;
     public static MousePosition mousePosition;
     public static BufferedImage mouseImage;
@@ -25,7 +24,7 @@ public class ScreenShotWithMouse {
         bufferedImage = null;
         mousePosition = null;
         try {
-            mouseImage = ImageIO.read(ScreenShotWithMouse.class.getClassLoader().getResource("image/mouse.png"));
+            mouseImage = ImageIO.read(CaptureScreenShotWithMouse.class.getClassLoader().getResource("image/mouse.png"));
         } catch (IOException e) {
             //TODO something
         }

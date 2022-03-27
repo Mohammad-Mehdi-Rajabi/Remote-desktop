@@ -1,4 +1,4 @@
-package CaptureScreenShot;
+package Core.CaptureScreenShot;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class CaptureScreenShotTest {
                 directory.mkdir();
             }
             // delete all files in test_pic directory
-            Util.Util.deleteFiles(new File("test_pic"));
+            Core.Util.Util.deleteFiles(new File("test_pic"));
         }
         setUpDone = true;
     }
