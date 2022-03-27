@@ -1,4 +1,4 @@
-package Core.MousePosition;
+package Core.Mouse;
 
 import java.awt.*;
 import java.io.Serializable;

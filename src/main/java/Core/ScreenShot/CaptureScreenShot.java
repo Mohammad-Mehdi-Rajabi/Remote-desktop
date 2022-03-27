@@ -1,4 +1,4 @@
-package Core.CaptureScreenShot;
+package Core.ScreenShot;
 
 
 import java.awt.*;

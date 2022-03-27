@@ -1,6 +1,6 @@
-package Core.CaptureScreenShot.Runnable;
+package Core.ScreenShot.Runnable;
 
-import Core.CaptureScreenShot.CaptureScreenShotWithMouse;
+import Core.ScreenShot.CaptureScreenShotWithMouse;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
