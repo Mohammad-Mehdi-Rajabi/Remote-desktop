@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="519.0" prefWidth="317.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SetUpClientWindowController">
+    <children>
+        <Label layoutX="33.0" layoutY="95.0" prefHeight="27.0" prefWidth="41.0" text="Port">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <TextField fx:id="portTxt" layoutX="111.0" layoutY="96.0" prefHeight="25.0" prefWidth="100.0" />
+        <TextField fx:id="IPTxt" layoutX="111.0" layoutY="44.0" prefHeight="25.0" prefWidth="132.0">
+            <font>
+                <Font size="15.0" />
+            </font>
+        </TextField>
+        <Label layoutX="34.0" layoutY="47.0" text="IP">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <Label layoutX="31.0" layoutY="139.0" text="Password">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Label>
+        <TextField fx:id="passwordTxt" layoutX="111.0" layoutY="139.0" prefHeight="25.0" prefWidth="155.0" />
+        <Button fx:id="createBtn" layoutX="18.0" layoutY="464.0" mnemonicParsing="false" onAction="#onActionCreateBtn" prefHeight="25.0" prefWidth="71.0" text="Create" />
+        <CheckBox fx:id="portCheckBox" layoutX="26.0" layoutY="195.0" mnemonicParsing="false" onMouseClicked="#onMouseClickedPortCheckBox" text="Add ports " />
+        <VBox layoutX="161.0" layoutY="229.0" prefHeight="200.0" prefWidth="100.0">
+            <children>
+                <TextField fx:id="screenPortTxt" prefHeight="25.0" prefWidth="100.0" />
+                <TextField fx:id="mousePortTxt" prefHeight="25.0" prefWidth="100.0">
+                    <VBox.margin>
+                        <Insets top="33.0" />
+                    </VBox.margin>
+                </TextField>
+                <TextField fx:id="keyBoardPortTxt" prefHeight="25.0" prefWidth="100.0">
+                    <VBox.margin>
+                        <Insets top="33.0" />
+                    </VBox.margin>
+                </TextField>
+                <TextField fx:id="dataTransferPortTxt" prefHeight="25.0" prefWidth="100.0">
+                    <VBox.margin>
+                        <Insets top="33.0" />
+                    </VBox.margin>
+                </TextField>
+            </children>
+        </VBox>
+        <VBox layoutX="43.0" layoutY="229.0" prefHeight="200.0" prefWidth="110.0">
+            <children>
+                <Label prefHeight="17.0" prefWidth="101.0" text="Screen port">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                </Label>
+                <Label text="Mouse port">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="40.0" />
+                    </VBox.margin>
+                </Label>
+                <Label text="Key board port">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="40.0" />
+                    </VBox.margin>
+                </Label>
+                <Label text="Data transfer port">
+                    <font>
+                        <Font size="13.0" />
+                    </font>
+                    <VBox.margin>
+                        <Insets top="40.0" />
+                    </VBox.margin>
+                </Label>
+            </children>
+        </VBox>
+
+    </children>
+</AnchorPane>
