@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="486.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SetUpServerWindowController">
+    <children>
+        <Label layoutX="31.0" layoutY="95.0" prefHeight="27.0" prefWidth="41.0" text="Port">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="portTxt" layoutX="79.0" layoutY="96.0" prefHeight="25.0" prefWidth="100.0"/>
+        <TextField fx:id="IPTxt" layoutX="79.0" layoutY="47.0" prefHeight="25.0" prefWidth="132.0">
+            <font>
+                <Font size="15.0"/>
+            </font>
+        </TextField>
+        <Label layoutX="31.0" layoutY="47.0" text="IP">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <Label layoutX="262.0" layoutY="47.0" text="Create Password">
+            <font>
+                <Font size="16.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="passwordTxt" layoutX="398.0" layoutY="47.0" prefHeight="25.0" prefWidth="155.0"/>
+        <Button fx:id="createBtn" layoutX="31.0" layoutY="440.0" mnemonicParsing="false" onAction="#onActionCreateBtn"
+                prefHeight="25.0" prefWidth="71.0" text="Create"/>
+        <TextField fx:id="especialIPTxt" layoutX="31.0" layoutY="185.0" prefHeight="25.0" prefWidth="100.0"
+                   promptText="IP"/>
+        <TextField fx:id="especialPasswordTxt" layoutX="133.0" layoutY="185.0" prefHeight="25.0" prefWidth="110.0"
+                   promptText="Password"/>
+        <Button fx:id="especialAddBtn" layoutX="248.0" layoutY="185.0" mnemonicParsing="false"
+                onAction="#especialAddBtn" text="ADD"/>
+        <CheckBox fx:id="IPCheckBox" layoutX="29.0" layoutY="156.0" mnemonicParsing="false"
+                  onMouseClicked="#onMouseClickedIPCheckBox" text="Use especial IPs"/>
+        <TableView fx:id="tableView" layoutX="31.0" layoutY="218.0" prefHeight="200.0" prefWidth="258.0"/>
+        <Label layoutX="197.0" layoutY="94.0" text="Application need 4 port, enter first port and " textFill="#bc1313"/>
+        <Label layoutX="196.0" layoutY="109.0" text="system automatically will Reserve the next three."
+               textFill="#bc1313"/>
+        <CheckBox fx:id="portCheckBox" layoutX="315.0" layoutY="156.0" mnemonicParsing="false"
+                  onMouseClicked="#onMouseClickedPortCheckBox" text="Add ports "/>
+        <VBox layoutX="445.0" layoutY="218.0" prefHeight="200.0" prefWidth="100.0">
+            <children>
+                <TextField fx:id="screenPortTxt" prefHeight="25.0" prefWidth="100.0"/>
+                <TextField fx:id="mousePortTxt" prefHeight="25.0" prefWidth="100.0">
+                    <VBox.margin>
+                        <Insets top="33.0"/>
+                    </VBox.margin>
+                </TextField>
+                <TextField fx:id="keyBoardPortTxt" prefHeight="25.0" prefWidth="100.0">
+                    <VBox.margin>
+                        <Insets top="33.0"/>
+                    </VBox.margin>
+                </TextField>
+                <TextField fx:id="dataTransferPortTxt" prefHeight="25.0" prefWidth="100.0">
+                    <VBox.margin>
+                        <Insets top="33.0"/>
+                    </VBox.margin>
+                </TextField>
+            </children>
+        </VBox>
+        <VBox layoutX="323.0" layoutY="218.0" prefHeight="200.0" prefWidth="110.0">
+            <children>
+                <Label prefHeight="17.0" prefWidth="101.0" text="Screen port">
+                    <font>
+                        <Font size="13.0"/>
+                    </font>
+                </Label>
+                <Label text="Mouse port">
+                    <font>
+                        <Font size="13.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets top="40.0"/>
+                    </VBox.margin>
+                </Label>
+                <Label text="Key board port">
+                    <font>
+                        <Font size="13.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets top="40.0"/>
+                    </VBox.margin>
+                </Label>
+                <Label text="Data transfer port">
+                    <font>
+                        <Font size="13.0"/>
+                    </font>
+                    <VBox.margin>
+                        <Insets top="40.0"/>
+                    </VBox.margin>
+                </Label>
+            </children>
+        </VBox>
+        <Line endX="-100.0" endY="219.0" fill="#ebdfdf" layoutX="407.0" layoutY="210.0" startX="-100.0" startY="-15.0"
+              stroke="#d7c9c9"/>
+        <CheckBox fx:id="defaultPasswordCheckBox" layoutX="145.0" layoutY="156.0" mnemonicParsing="false"
+                  onMouseClicked="#onMouseClickedDefaultPasswordCheckBox" text="Use default password"/>
+
+    </children>
+</AnchorPane>

@@ -1,7 +1,7 @@
 package Core.ScreenShot;
 
 
-import Core.Mouse.MousePosition;
+import Core.Mouse.MousePosition.MousePosition;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -24,7 +24,7 @@ public class CaptureScreenShotWithMouse {
         bufferedImage = null;
         mousePosition = null;
         try {
-            mouseImage = ImageIO.read(CaptureScreenShotWithMouse.class.getClassLoader().getResource("image/mouse.png"));
+            mouseImage = ImageIO.read(CaptureScreenShotWithMouse.class.getClassLoader().getResource("images/mouse.png"));
         } catch (IOException e) {
             //TODO something
         }
