@@ -3,6 +3,7 @@ package Controllers;
 import Core.Node.Server;
 import Core.Property.IP;
 import Core.Util.Util;
+import Main.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -56,7 +57,10 @@ public class SetUpServerWindowController {
     public TextField dataTransferPortTxt;
     @FXML
     public Button createBtn;
+    @FXML
     public CheckBox defaultPasswordCheckBox;
+    @FXML
+    public Button backBtn;
 
     TableColumn<IP, String> tableColumnIP;
     TableColumn<IP, String> tableColumnPassword;
@@ -354,6 +358,10 @@ public class SetUpServerWindowController {
             passwordTxt.setDisable(true);
             passwordTxt.setEditable(false);
         }
+    }
+
+    public void onActionBackBtn(ActionEvent actionEvent) {
+        Main.switchScene(getClass().getClassLoader().getResource("views/MainWindow.fxml"),"Remote Desktop Application",false);
     }
 }
 

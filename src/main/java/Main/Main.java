@@ -17,6 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
+        stage.centerOnScreen();
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Views/MainWindow.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Remote Desktop Application");
@@ -34,6 +35,7 @@ public class Main extends Application {
             stage.setResizable(resizeable);
             stage.setTitle(title);
             stage.setScene(new Scene(root));
+            stage.centerOnScreen();
         } catch (IOException e) {
             //TODO something
         }
@@ -47,6 +49,7 @@ public class Main extends Application {
             stage2.setScene(new Scene(parent));
             stage2.setResizable(false);
             stage2.setTitle(title);
+            stage2.centerOnScreen();
             stage2.show();
         } catch (IOException e) {
             //TODO something
