@@ -1,8 +1,5 @@
 package Core.Node;
 
-import java.net.*;
-import java.io.*;
-
 /**
  * class Server for listening on a port
  * Interface: Core.Node
@@ -10,6 +7,7 @@ import java.io.*;
 public class Server implements Node {
 
     private int port;
+
 
 
     /**

@@ -1,15 +1,21 @@
 package Main;
 
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Paths;
+
 
 public class Main extends Application {
     public static Stage stage;
@@ -20,6 +26,10 @@ public class Main extends Application {
         stage.centerOnScreen();
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Views/MainWindow.fxml"));
         primaryStage.setScene(new Scene(root));
+        /*primaryStage.getIcons().add(SwingFXUtils.toFXImage(
+                ImageIO.read(
+                        new File(getClass().getClassLoader().getResource("images/icon.jpg").toURI())), null)
+        );*/
         primaryStage.setTitle("Remote Desktop Application");
         primaryStage.show();
     }
@@ -38,6 +48,7 @@ public class Main extends Application {
             stage.centerOnScreen();
         } catch (IOException e) {
             //TODO something
+            e.printStackTrace();
         }
     }
 
@@ -53,6 +64,8 @@ public class Main extends Application {
             stage2.show();
         } catch (IOException e) {
             //TODO something
+            e.printStackTrace();
         }
     }
+
 }

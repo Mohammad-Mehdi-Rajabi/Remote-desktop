@@ -5,85 +5,111 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="519.0" prefWidth="317.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SetUpClientWindowController">
+<AnchorPane style="-fx-background-color: #75E5FF" prefHeight="519.0" prefWidth="317.0"
+            xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Controllers.SetUpClientWindowController">
     <children>
         <Label layoutX="33.0" layoutY="95.0" prefHeight="27.0" prefWidth="41.0" text="Port">
             <font>
-                <Font size="16.0" />
+                <Font size="16.0"/>
             </font>
         </Label>
-        <TextField fx:id="portTxt" layoutX="111.0" layoutY="96.0" prefHeight="25.0" prefWidth="100.0" />
+        <TextField fx:id="portTxt" layoutX="111.0" layoutY="96.0" prefHeight="25.0" prefWidth="100.0"/>
         <TextField fx:id="IPTxt" layoutX="111.0" layoutY="44.0" prefHeight="25.0" prefWidth="132.0">
             <font>
-                <Font size="15.0" />
+                <Font size="15.0"/>
             </font>
         </TextField>
         <Label layoutX="34.0" layoutY="47.0" text="IP">
             <font>
-                <Font size="16.0" />
+                <Font size="16.0"/>
             </font>
         </Label>
         <Label layoutX="31.0" layoutY="139.0" text="Password">
             <font>
-                <Font size="16.0" />
+                <Font size="16.0"/>
             </font>
         </Label>
-        <TextField fx:id="passwordTxt" layoutX="111.0" layoutY="139.0" prefHeight="25.0" prefWidth="155.0" />
-        <Button fx:id="createBtn" layoutX="18.0" layoutY="464.0" mnemonicParsing="false" onAction="#onActionCreateBtn" prefHeight="25.0" prefWidth="71.0" text="Create" />
-        <CheckBox fx:id="portCheckBox" layoutX="26.0" layoutY="195.0" mnemonicParsing="false" onMouseClicked="#onMouseClickedPortCheckBox" text="Add ports " />
+        <TextField fx:id="passwordTxt" layoutX="111.0" layoutY="139.0" prefHeight="25.0" prefWidth="155.0"/>
+        <Button style="-fx-background-color:
+        linear-gradient(#f0ff35, #a9ff00),
+        radial-gradient(center 50% -40%, radius 200%, #b8ee36 45%, #80c800 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: #395306;" fx:id="createBtn" layoutX="18.0" layoutY="464.0" mnemonicParsing="false"
+                onAction="#onActionCreateBtn" prefHeight="25.0" prefWidth="71.0" text="Join"/>
+        <CheckBox fx:id="portCheckBox" layoutX="26.0" layoutY="195.0" mnemonicParsing="false"
+                  onMouseClicked="#onMouseClickedPortCheckBox" text="Add ports "/>
         <VBox layoutX="161.0" layoutY="229.0" prefHeight="200.0" prefWidth="100.0">
             <children>
-                <TextField fx:id="screenPortTxt" prefHeight="25.0" prefWidth="100.0" />
+                <TextField fx:id="screenPortTxt" prefHeight="25.0" prefWidth="100.0"/>
                 <TextField fx:id="mousePortTxt" prefHeight="25.0" prefWidth="100.0">
                     <VBox.margin>
-                        <Insets top="33.0" />
+                        <Insets top="33.0"/>
                     </VBox.margin>
                 </TextField>
                 <TextField fx:id="keyBoardPortTxt" prefHeight="25.0" prefWidth="100.0">
                     <VBox.margin>
-                        <Insets top="33.0" />
+                        <Insets top="33.0"/>
                     </VBox.margin>
                 </TextField>
                 <TextField fx:id="dataTransferPortTxt" prefHeight="25.0" prefWidth="100.0">
                     <VBox.margin>
-                        <Insets top="33.0" />
+                        <Insets top="33.0"/>
                     </VBox.margin>
                 </TextField>
             </children>
         </VBox>
         <VBox layoutX="43.0" layoutY="229.0" prefHeight="200.0" prefWidth="110.0">
             <children>
-                <Label prefHeight="17.0" prefWidth="101.0" text="Screen port">
+                <Label fx:id="screenPortLbl" prefHeight="17.0" prefWidth="101.0" text="Screen port">
                     <font>
-                        <Font size="13.0" />
+                        <Font size="13.0"/>
                     </font>
                 </Label>
-                <Label text="Mouse port">
+                <Label fx:id="mousePortLbl" text="Mouse port">
                     <font>
-                        <Font size="13.0" />
+                        <Font size="13.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets top="40.0" />
+                        <Insets top="40.0"/>
                     </VBox.margin>
                 </Label>
-                <Label text="Key board port">
+                <Label fx:id="keyBoardPortLbl" text="Key board port">
                     <font>
-                        <Font size="13.0" />
+                        <Font size="13.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets top="40.0" />
+                        <Insets top="40.0"/>
                     </VBox.margin>
                 </Label>
-                <Label text="Data transfer port">
+                <Label fx:id="dataTransferPortLbl" text="Data transfer port">
                     <font>
-                        <Font size="13.0" />
+                        <Font size="13.0"/>
                     </font>
                     <VBox.margin>
-                        <Insets top="40.0" />
+                        <Insets top="40.0"/>
                     </VBox.margin>
                 </Label>
             </children>
         </VBox>
+        <Button style="-fx-background-color: linear-gradient(#ff5400, #be1d00);
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;" fx:id="backBtn" layoutX="93.0" layoutY="464.0" mnemonicParsing="false"
+                onAction="#onActionBackBtn" text="Back"/>
+        <Label fx:id="wrongPasswordLbl" layoutX="65.0" layoutY="162.0" prefHeight="17.0" prefWidth="238.0"
+               textFill="#e40000">
+            <font>
+                <Font name="Arial" size="14.0"/>
+            </font>
+        </Label>
+        <Label fx:id="IPWrongLbl" layoutX="40.0" layoutY="14.0" prefHeight="23.0" prefWidth="146.0" textFill="#e10909">
+            <font>
+                <Font name="AIGDT" size="13.0"/>
+            </font>
+        </Label>
 
     </children>
 </AnchorPane>

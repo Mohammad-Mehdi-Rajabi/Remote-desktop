@@ -3,8 +3,11 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="723.0" prefWidth="1246.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ShareScreenWindowController">
-   <children>
-      <ImageView fx:id="screenImageView" fitHeight="813.0" fitWidth="1321.0" layoutX="-1.0" pickOnBounds="true" preserveRatio="true" />
-   </children>
+<AnchorPane fx:id="anchorPane" prefHeight="653.0" prefWidth="897.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ShareScreenWindowController">
+    <children>
+
+
+        <ImageView fx:id="screenImageView" fitHeight="691.0" fitWidth="1172.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
+         
+    </children>
 </AnchorPane>

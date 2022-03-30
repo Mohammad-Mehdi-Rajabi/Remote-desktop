@@ -61,6 +61,14 @@ public class SetUpServerWindowController {
     public CheckBox defaultPasswordCheckBox;
     @FXML
     public Button backBtn;
+    @FXML
+    public Label screenPortLbl;
+    @FXML
+    public Label mousePortLbl;
+    @FXML
+    public Label keyBoardPortLbl;
+    @FXML
+    public Label dataTransferPortLbl;
 
     TableColumn<IP, String> tableColumnIP;
     TableColumn<IP, String> tableColumnPassword;
@@ -69,6 +77,7 @@ public class SetUpServerWindowController {
 
     private static Map<String, Server> ips;
     private static List<IP> especialIpsList;
+    private static String defaultPassword;
 
     static {
         ips = new HashMap<>();
@@ -157,6 +166,11 @@ public class SetUpServerWindowController {
             dataTransferPortTxt.setDisable(true);
             portTxt.setDisable(false);
             portTxt.setEditable(true);
+            screenPortLbl.setDisable(true);
+            mousePortLbl.setDisable(true);
+            keyBoardPortLbl.setDisable(true);
+            dataTransferPortLbl.setDisable(true);
+
         }
         IPTxt.setEditable(false);
         IPTxt.setText(Util.getSystemIP());
@@ -248,6 +262,12 @@ public class SetUpServerWindowController {
             dataTransferPortTxt.setDisable(false);
             portTxt.setDisable(true);
             portTxt.setEditable(false);
+            portTxt.setEditable(false);
+            screenPortLbl.setDisable(false);
+            mousePortLbl.setDisable(false);
+            keyBoardPortLbl.setDisable(false);
+            dataTransferPortLbl.setDisable(false);
+
         } else {
             screenPortTxt.setEditable(false);
             screenPortTxt.setDisable(true);
@@ -259,6 +279,12 @@ public class SetUpServerWindowController {
             dataTransferPortTxt.setDisable(true);
             portTxt.setDisable(false);
             portTxt.setEditable(true);
+            portTxt.setEditable(true);
+            screenPortLbl.setDisable(true);
+            mousePortLbl.setDisable(true);
+            keyBoardPortLbl.setDisable(true);
+            dataTransferPortLbl.setDisable(true);
+
         }
     }
 
@@ -319,23 +345,27 @@ public class SetUpServerWindowController {
     }
 
     public void onActionCreateBtn(ActionEvent actionEvent) {
-        if (!portCheckBox.isSelected()) {
-            ips.put("screenServer", new Server(Integer.parseInt(portTxt.getText())));
-            ips.put("mouseServer", new Server(Integer.parseInt(portTxt.getText()) + 1));
-            ips.put("keyBoardServer", new Server(Integer.parseInt(portTxt.getText()) + 2));
-            ips.put("DataTransferServer", new Server(Integer.parseInt(portTxt.getText()) + 3));
-        } else {
-            ips.put("screenServer", new Server(Integer.parseInt(screenPortTxt.getText())));
-            ips.put("mouseServer", new Server(Integer.parseInt(mousePortTxt.getText())));
-            ips.put("keyBoardServer", new Server(Integer.parseInt(keyBoardPortTxt.getText())));
-            ips.put("DataTransferServer", new Server(Integer.parseInt(dataTransferPortTxt.getText())));
-        }
-        if (IPCheckBox.isSelected()) {
-            for (IP ip : observableList) {
-                especialIpsList.add(ip);
+        try {
+            if (!portCheckBox.isSelected()) {
+                ips.put("screenServer", new Server(Integer.parseInt(portTxt.getText())));
+                ips.put("mouseServer", new Server(Integer.parseInt(portTxt.getText()) + 1));
+                ips.put("keyBoardServer", new Server(Integer.parseInt(portTxt.getText()) + 2));
+                ips.put("DataTransferServer", new Server(Integer.parseInt(portTxt.getText()) + 3));
+            } else {
+                ips.put("screenServer", new Server(Integer.parseInt(screenPortTxt.getText())));
+                ips.put("mouseServer", new Server(Integer.parseInt(mousePortTxt.getText())));
+                ips.put("keyBoardServer", new Server(Integer.parseInt(keyBoardPortTxt.getText())));
+                ips.put("DataTransferServer", new Server(Integer.parseInt(dataTransferPortTxt.getText())));
             }
+            if (IPCheckBox.isSelected()) {
+                for (IP ip : observableList) {
+                    especialIpsList.add(ip);
+                }
+            }
+        } catch (Exception e) {
+            //TODO something
         }
-
+        defaultPassword = passwordTxt.getText();
     }
 
     public static Map<String, Server> getIps() {
@@ -344,6 +374,10 @@ public class SetUpServerWindowController {
 
     public static List<IP> getEspecialIpsList() {
         return especialIpsList;
+    }
+
+    public static String getDefaultPassword() {
+        return defaultPassword;
     }
 
     public void onMouseClickedDefaultPasswordCheckBox(MouseEvent mouseEvent) {
@@ -361,7 +395,7 @@ public class SetUpServerWindowController {
     }
 
     public void onActionBackBtn(ActionEvent actionEvent) {
-        Main.switchScene(getClass().getClassLoader().getResource("views/MainWindow.fxml"),"Remote Desktop Application",false);
+        Main.switchScene(getClass().getClassLoader().getResource("views/MainWindow.fxml"), "Remote Desktop Application", false);
     }
 }
 
