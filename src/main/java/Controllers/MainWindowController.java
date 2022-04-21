@@ -1,6 +1,6 @@
 package Controllers;
 
-import Main.Main;
+import Core.Util.Util;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -16,10 +16,12 @@ public class MainWindowController {
     Socket socket = null;
 
     public void createServerBtnOnAction(ActionEvent actionEvent) throws IOException {
-        Main.switchScene(getClass().getClassLoader().getResource("views/SetUpServerWindow.fxml"), "Setup Server", false);
+        Util.switchWindow(getClass().getClassLoader().getResource("views/SetUpServerWindow.fxml"),
+                "Setup Server", false);
     }
 
     public void joinServerBtnOnAction(ActionEvent actionEvent) {
-        Main.switchScene(getClass().getClassLoader().getResource("views/SetUpClientWindow.fxml"), "Setup Client", false);
+        Util.switchWindow(getClass().getClassLoader().getResource("views/SetUpClientWindow.fxml"),
+                "Setup Client", false);
     }
 }

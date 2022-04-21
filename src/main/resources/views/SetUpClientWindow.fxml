@@ -38,7 +38,7 @@
     -fx-background-insets: 0, 1;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
     -fx-text-fill: #395306;" fx:id="createBtn" layoutX="18.0" layoutY="464.0" mnemonicParsing="false"
-                onAction="#onActionCreateBtn" prefHeight="25.0" prefWidth="71.0" text="Join"/>
+                onAction="#onActionJoinBtn" prefHeight="25.0" prefWidth="71.0" text="Join"/>
         <CheckBox fx:id="portCheckBox" layoutX="26.0" layoutY="195.0" mnemonicParsing="false"
                   onMouseClicked="#onMouseClickedPortCheckBox" text="Add ports "/>
         <VBox layoutX="161.0" layoutY="229.0" prefHeight="200.0" prefWidth="100.0">

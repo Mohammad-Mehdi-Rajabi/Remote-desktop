@@ -1,24 +1,24 @@
 package Controllers;
 
-import Core.Node.Client;
-import Core.Property.IP;
+
+import Core.Node.Server;
 import Core.Util.Util;
-import Main.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
+import Core.Manager.Client.ManagedClient;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
-import javax.xml.ws.spi.http.HttpContext;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 public class SetUpClientWindowController {
     @FXML
@@ -125,45 +125,79 @@ public class SetUpClientWindowController {
         wrongPasswordLbl.setVisible(false);
         wrongPasswordLbl.setText("your entry password was incorrect");
         IPWrongLbl.setVisible(false);
-        IPWrongLbl.setText("IP or Port was incorrect");
+        IPWrongLbl.setText("IP was incorrect");
     }
 
-    public void onActionCreateBtn(ActionEvent actionEvent) {
+    public void onActionJoinBtn(ActionEvent actionEvent) {
         wrongPasswordLbl.setVisible(false);
         IPWrongLbl.setVisible(false);
-        Client dataTransferClient = null;
-        if (portCheckBox.isSelected()) {
-            dataTransferClient = new Client(IPTxt.getText(), Integer.parseInt(dataTransferPortTxt.getText()));
+        ManagedClient.setPassword(passwordTxt.getText());
+        ManagedClient.setIp(IPTxt.getText());
+        Map<String, Server> servers = ManagedClient.getServers();
+        if (!portCheckBox.isSelected()) {
+            servers.put("screenServer", new Server(Integer.parseInt(portTxt.getText())));
+            servers.put("mouseServer", new Server(Integer.parseInt(portTxt.getText()) + 1));
+            servers.put("keyBoardServer", new Server(Integer.parseInt(portTxt.getText()) + 2));
+            servers.put("dataTransferServer", new Server(Integer.parseInt(portTxt.getText()) + 3));
         } else {
-            dataTransferClient = new Client(IPTxt.getText(), Integer.parseInt(portTxt.getText()) + 3);
+            servers.put("screenServer", new Server(Integer.parseInt(screenPortTxt.getText())));
+            servers.put("mouseServer", new Server(Integer.parseInt(mousePortTxt.getText())));
+            servers.put("keyBoardServer", new Server(Integer.parseInt(keyBoardPortTxt.getText())));
+            servers.put("dataTransferServer", new Server(Integer.parseInt(dataTransferPortTxt.getText())));
         }
         try {
-            Socket socket = new Socket(dataTransferClient.getAddress(), dataTransferClient.getPort());
-            DataOutputStream dataOutputStream=
+            Socket socket = new Socket(IPTxt.getText(), servers.get("dataTransferServer").getPort());
+            DataOutputStream dataOutputStream =
                     new DataOutputStream(socket.getOutputStream());
-            //TODO is better to use hash code for send password
-            dataOutputStream.writeUTF("Password="+passwordTxt.getText());
+            dataOutputStream.writeUTF("password");
             dataOutputStream.flush();
-            dataOutputStream.close();
-            if (new DataInputStream(socket.getInputStream()).readUTF().equals("accept")) {
-                Main.switchScene(getClass().getClassLoader().getResource("views/ShareScreenWindow.fxml"), "Remote Desktop Application", true);
-            } else {
-                passwordTxt.clear();
-                wrongPasswordLbl.setVisible(true);
-            }
-        } catch (IOException e) {
-            IPTxt.clear();
-            if(portCheckBox.isSelected()){
-                dataTransferPortTxt.clear();
-                screenPortTxt.clear();
-                mousePortTxt.clear();
-               keyBoardPortTxt.clear();
-            }else {
-                portTxt.clear();
-            }
-            IPWrongLbl.setVisible(true);
-        }
 
+            DataInputStream dataInputStream =
+                    new DataInputStream(socket.getInputStream());
+            String password = dataInputStream.readUTF();
+
+            dataOutputStream.writeUTF("IPList");
+            dataOutputStream.flush();
+            String countOfIP = dataInputStream.readUTF();
+            List<String> ipsAndPasswords = new ArrayList<>();
+            for (int i = 0; i < Integer.parseInt(countOfIP); i++) {
+                ipsAndPasswords.add(dataInputStream.readUTF());
+            }
+            if (ipsAndPasswords.size() == 0) {
+                if (password.equals(passwordTxt.getText())) {
+                    dataOutputStream.writeUTF("validPassword");
+                    dataOutputStream.flush();
+                    Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
+                            "Control Panel", false);
+                } else {
+                    wrongPasswordLbl.setVisible(true);
+                    socket.close();
+                }
+            } else {
+                String[] ipAndPassword;
+                for (String s : ipsAndPasswords) {
+                    ipAndPassword = s.split(" ");
+                    if (ipAndPassword[0].equals(Util.getSystemIP())) {
+                        if (ipAndPassword[1].equals(passwordTxt.getText())) {
+                            dataOutputStream.writeUTF("validPassword");
+                            dataOutputStream.flush();
+                            Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
+                                    "Control Panel", false);
+                        } else {
+                            wrongPasswordLbl.setVisible(true);
+                            socket.close();
+                        }
+                    } else {
+                        IPWrongLbl.setVisible(true);
+                        socket.close();
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            //TODO something
+            e.printStackTrace();
+        }
 
     }
 
@@ -210,6 +244,7 @@ public class SetUpClientWindowController {
     }
 
     public void onActionBackBtn(ActionEvent actionEvent) {
-        Main.switchScene(getClass().getClassLoader().getResource("views/MainWindow.fxml"), "Remote Desktop Application", false);
+        Util.switchWindow(getClass().getClassLoader().getResource("views/MainWindow.fxml"),
+                "Remote Desktop Application", false);
     }
 }

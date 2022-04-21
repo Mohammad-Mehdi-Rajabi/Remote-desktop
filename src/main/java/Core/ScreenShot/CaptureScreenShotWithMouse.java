@@ -1,7 +1,7 @@
 package Core.ScreenShot;
 
 
-import Core.Mouse.MousePosition.MousePosition;
+import Core.Mouse.MousePosition.MousePosition.MousePosition;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -3,7 +3,7 @@ package Controllers;
 import Core.Node.Server;
 import Core.Property.IP;
 import Core.Util.Util;
-import Main.Main;
+import Core.Manager.Server.ManagedServer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -20,9 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -75,14 +72,9 @@ public class SetUpServerWindowController {
     ObservableList<IP> observableList;
 
 
-    private static Map<String, Server> ips;
-    private static List<IP> especialIpsList;
+
     private static String defaultPassword;
 
-    static {
-        ips = new HashMap<>();
-        especialIpsList = new ArrayList<>();
-    }
 
     @FXML
     public void initialize() {
@@ -345,17 +337,20 @@ public class SetUpServerWindowController {
     }
 
     public void onActionCreateBtn(ActionEvent actionEvent) {
+          Map servers= ManagedServer.getServers();
+          List especialIpsList = ManagedServer.getEspecialIpsList();
+
         try {
             if (!portCheckBox.isSelected()) {
-                ips.put("screenServer", new Server(Integer.parseInt(portTxt.getText())));
-                ips.put("mouseServer", new Server(Integer.parseInt(portTxt.getText()) + 1));
-                ips.put("keyBoardServer", new Server(Integer.parseInt(portTxt.getText()) + 2));
-                ips.put("DataTransferServer", new Server(Integer.parseInt(portTxt.getText()) + 3));
+                servers.put("screenServer", new Server(Integer.parseInt(portTxt.getText())));
+                servers.put("mouseServer", new Server(Integer.parseInt(portTxt.getText()) + 1));
+                servers.put("keyBoardServer", new Server(Integer.parseInt(portTxt.getText()) + 2));
+                servers.put("dataTransferServer", new Server(Integer.parseInt(portTxt.getText()) + 3));
             } else {
-                ips.put("screenServer", new Server(Integer.parseInt(screenPortTxt.getText())));
-                ips.put("mouseServer", new Server(Integer.parseInt(mousePortTxt.getText())));
-                ips.put("keyBoardServer", new Server(Integer.parseInt(keyBoardPortTxt.getText())));
-                ips.put("DataTransferServer", new Server(Integer.parseInt(dataTransferPortTxt.getText())));
+                servers.put("screenServer", new Server(Integer.parseInt(screenPortTxt.getText())));
+                servers.put("mouseServer", new Server(Integer.parseInt(mousePortTxt.getText())));
+                servers.put("keyBoardServer", new Server(Integer.parseInt(keyBoardPortTxt.getText())));
+                servers.put("dataTransferServer", new Server(Integer.parseInt(dataTransferPortTxt.getText())));
             }
             if (IPCheckBox.isSelected()) {
                 for (IP ip : observableList) {
@@ -365,20 +360,14 @@ public class SetUpServerWindowController {
         } catch (Exception e) {
             //TODO something
         }
-        defaultPassword = passwordTxt.getText();
+        ManagedServer.setDefaultPassword(passwordTxt.getText());
+        Util.switchWindow(getClass().getClassLoader().getResource("views/ServerControlPanelWindow.fxml"),
+                "Control panel",false);
+        Util.openWindow(getClass().getClassLoader().getResource("views/ShareScreenWindow.fxml"),
+                "Screen",true);
     }
 
-    public static Map<String, Server> getIps() {
-        return ips;
-    }
 
-    public static List<IP> getEspecialIpsList() {
-        return especialIpsList;
-    }
-
-    public static String getDefaultPassword() {
-        return defaultPassword;
-    }
 
     public void onMouseClickedDefaultPasswordCheckBox(MouseEvent mouseEvent) {
         if (defaultPasswordCheckBox.isSelected()) {
@@ -395,7 +384,8 @@ public class SetUpServerWindowController {
     }
 
     public void onActionBackBtn(ActionEvent actionEvent) {
-        Main.switchScene(getClass().getClassLoader().getResource("views/MainWindow.fxml"), "Remote Desktop Application", false);
+        Util.switchWindow(getClass().getClassLoader().getResource("views/MainWindow.fxml"),
+                "Remote Desktop Application", false);
     }
 }
 
