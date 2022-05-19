@@ -1,26 +1,29 @@
-package Controllers;
+package Controllers.ControllerImpl;
 
 
-import Core.Node.Server;
+import Controllers.Controller;
+import Core.Node.NodeImpl.Server;
 import Core.Util.Util;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import Core.Manager.Client.ManagedClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 
-public class SetUpClientWindowController {
+public class SetUpClientWindowController implements Initializable, Controller {
     @FXML
     public TextField passwordTxt;
     @FXML
@@ -54,8 +57,8 @@ public class SetUpClientWindowController {
     public Label IPWrongLbl;
 
 
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         /**
          *  port text fields just get number
          */
@@ -247,4 +250,5 @@ public class SetUpClientWindowController {
         Util.switchWindow(getClass().getClassLoader().getResource("views/MainWindow.fxml"),
                 "Remote Desktop Application", false);
     }
+
 }

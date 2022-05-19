@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -106,6 +105,7 @@ public class Util {
             main.stage.setTitle(title);
             main.stage.setScene(new Scene(root));
             main.stage.centerOnScreen();
+            main.stage.setAlwaysOnTop(true);
         } catch (IOException e) {
             //TODO something
             e.printStackTrace();
@@ -129,10 +129,45 @@ public class Util {
             stage2.setResizable(resizeable);
             stage2.setTitle(title);
             stage2.centerOnScreen();
+            stage2.setAlwaysOnTop(true);
             stage2.show();
         } catch (IOException e) {
             //TODO something
             e.printStackTrace();
         }
+    }
+
+
+    public static Stage switchWindowWithReturnValue(URL url, String title, Boolean resizeable) {
+        try {
+            Parent root = FXMLLoader.load(url);
+            main.stage.setResizable(resizeable);
+            main.stage.setTitle(title);
+            main.stage.setScene(new Scene(root));
+            main.stage.centerOnScreen();
+            main.stage.setAlwaysOnTop(true);
+        } catch (IOException e) {
+            //TODO something
+            e.printStackTrace();
+        }
+        return Main.stage;
+    }
+
+    public static Stage openWindowWithReturnValue(URL url, String title, boolean resizeable) {
+        Stage stage2 = new Stage();
+        try {
+            stage2.setResizable(resizeable);
+            Parent parent = FXMLLoader.load(url);
+            stage2.setScene(new Scene(parent));
+            stage2.setResizable(resizeable);
+            stage2.setTitle(title);
+            stage2.centerOnScreen();
+            stage2.setAlwaysOnTop(true);
+            stage2.show();
+        } catch (IOException e) {
+            //TODO something
+            e.printStackTrace();
+        }
+        return stage2;
     }
 }

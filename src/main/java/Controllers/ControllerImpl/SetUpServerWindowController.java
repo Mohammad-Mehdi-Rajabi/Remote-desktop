@@ -1,6 +1,7 @@
-package Controllers;
+package Controllers.ControllerImpl;
 
-import Core.Node.Server;
+import Controllers.Controller;
+import Core.Node.NodeImpl.Server;
 import Core.Property.IP;
 import Core.Util.Util;
 import Core.Manager.Server.ManagedServer;
@@ -11,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -20,11 +22,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 
-public class SetUpServerWindowController {
+public class SetUpServerWindowController implements Initializable, Controller {
 
     @FXML
     public TextField portTxt;
@@ -73,11 +77,12 @@ public class SetUpServerWindowController {
 
 
 
-    private static String defaultPassword;
+    public static  Stage shareScreenWindowStage;
 
 
-    @FXML
-    public void initialize() {
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
         /**
          *  port text fields just get number
@@ -363,8 +368,11 @@ public class SetUpServerWindowController {
         ManagedServer.setDefaultPassword(passwordTxt.getText());
         Util.switchWindow(getClass().getClassLoader().getResource("views/ServerControlPanelWindow.fxml"),
                 "Control panel",false);
-        Util.openWindow(getClass().getClassLoader().getResource("views/ShareScreenWindow.fxml"),
-                "Screen",true);
+        shareScreenWindowStage = Util.openWindowWithReturnValue(getClass().getClassLoader().getResource("views/ShareScreenWindow.fxml"),
+                "Screen", true);
+        shareScreenWindowStage.getScene().setOnKeyReleased(ShareScreenWindowController::onKeyReleasedScene);
+        shareScreenWindowStage.getScene().setOnKeyPressed(ShareScreenWindowController::onKeyPressedScene);
+;
     }
 
 
@@ -387,5 +395,8 @@ public class SetUpServerWindowController {
         Util.switchWindow(getClass().getClassLoader().getResource("views/MainWindow.fxml"),
                 "Remote Desktop Application", false);
     }
+
+
+
 }
 

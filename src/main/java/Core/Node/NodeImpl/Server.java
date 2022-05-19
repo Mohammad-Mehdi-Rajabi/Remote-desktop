@@ -1,4 +1,6 @@
-package Core.Node;
+package Core.Node.NodeImpl;
+
+import Core.Node.Node;
 
 /**
  * class Server for listening on a port

@@ -1,25 +1,25 @@
-package Controllers;
+package Controllers.ControllerImpl;
 
 
+import Controllers.Controller;
 import Core.Image.ByteOfImage.ByteOfImage;
 import Core.Property.IP;
 import Core.Manager.Server.ManagedServer;
-import Core.Util.Util;
 import javafx.animation.AnimationTimer;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class ServerControlPanelWindowController {
+public class ServerControlPanelWindowController implements Initializable, Controller {
     @FXML
     public Button start;
     @FXML
@@ -128,6 +128,11 @@ public class ServerControlPanelWindowController {
 
 
     public void startRemoteDesktop() {
+
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
 
     }
 }

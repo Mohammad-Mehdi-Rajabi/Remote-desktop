@@ -7,7 +7,7 @@
 
 <AnchorPane style="-fx-background-color: #75E5FF" prefHeight="519.0" prefWidth="317.0"
             xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Controllers.SetUpClientWindowController">
+            fx:controller="Controllers.ControllerImpl.SetUpClientWindowController">
     <children>
         <Label layoutX="33.0" layoutY="95.0" prefHeight="27.0" prefWidth="41.0" text="Port">
             <font>

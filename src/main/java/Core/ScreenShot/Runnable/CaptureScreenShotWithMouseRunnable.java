@@ -1,19 +1,14 @@
 package Core.ScreenShot.Runnable;
 
 import Core.Image.ByteOfImage.ByteOfImage;
-import Core.Node.Client;
+import Core.Node.NodeImpl.Client;
 import Core.ScreenShot.CaptureScreenShotWithMouse;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-
-import static Core.ScreenShot.CaptureScreenShotWithMouse.bufferedImage;
 
 public class CaptureScreenShotWithMouseRunnable implements Runnable {
     public int port;
@@ -31,30 +26,6 @@ public class CaptureScreenShotWithMouseRunnable implements Runnable {
 
     @Override
     public void run() {
-//        try {
-//            BufferedImage bufferedImage = null;
-//            Socket socket = null;
-//            while (true) {
-//                socket = new Socket(IP, port);
-//                bufferedImage = CaptureScreenShotWithMouse.tackScreenShot();
-//                ImageIO.write(bufferedImage, "jpg", socket.getOutputStream());
-//                socket.getOutputStream().flush();
-//                socket.getOutputStream().close();
-//                Thread.sleep(1);
-//            }
-//        } catch (AWTException e) {
-//            //TODO something
-//            e.printStackTrace();
-//        } catch (UnknownHostException e) {
-//            //TODO something
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            //TODO something
-//            e.printStackTrace();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
         try {
             BufferedImage bufferedImage = null;
             ObjectOutputStream objectOutputStream=null;

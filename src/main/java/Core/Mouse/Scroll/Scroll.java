@@ -5,8 +5,8 @@ import java.awt.*;
 public class Scroll {
     private Robot robot;
 
-    public Scroll() throws AWTException {
-        robot=new Robot();
+    public Scroll(Robot robot) throws AWTException {
+        this.robot=robot;
     }
     public void scrolling(double x){
         if(x<0)

@@ -1,8 +1,7 @@
 package Core.Manager.Server;
 
-import Core.Node.Server;
+import Core.Node.NodeImpl.Server;
 import Core.Property.IP;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

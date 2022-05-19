@@ -1,7 +1,8 @@
 package Core.Manager.Client;
 
-import Core.Node.Server;
+import Core.Node.NodeImpl.Server;
 import Core.Util.Util;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -12,6 +13,7 @@ public class ManagedClient {
     private static String password;
     private static String ip;
     private static Map<String, Server> servers;
+
     static {
         servers = new HashMap<>();
     }
@@ -39,16 +41,17 @@ public class ManagedClient {
     public static void setServers(Map<String, Server> servers) {
         ManagedClient.servers = servers;
     }
-    public static boolean sendPassword(){
+
+    public static boolean sendPassword() {
         try {
-            Socket socket=new Socket(ip,servers.get("dataTransferServer").getPort());
-            DataOutputStream dataOutputStream=
+            Socket socket = new Socket(ip, servers.get("dataTransferServer").getPort());
+            DataOutputStream dataOutputStream =
                     new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeUTF(password);
             dataOutputStream.flush();
             dataOutputStream.close();
-             socket=new Socket(ip,servers.get("dataTransferServer").getPort());
-             dataOutputStream=
+            socket = new Socket(ip, servers.get("dataTransferServer").getPort());
+            dataOutputStream =
                     new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeUTF(Util.getSystemIP());
             dataOutputStream.flush();

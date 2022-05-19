@@ -1,7 +1,8 @@
-package Core.Node;
+package Core.Node.NodeImpl;
 
-import java.net.*;
-import java.io.*;
+import Core.Node.Node;
+
+
 
 /**
  * class Client for connecting to  especial IP and port
