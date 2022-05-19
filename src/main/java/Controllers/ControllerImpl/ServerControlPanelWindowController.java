@@ -3,6 +3,7 @@ package Controllers.ControllerImpl;
 
 import Controllers.Controller;
 import Core.Image.ByteOfImage.ByteOfImage;
+import Core.Manager.ServerType.ServerType;
 import Core.Property.IP;
 import Core.Manager.Server.ManagedServer;
 import javafx.animation.AnimationTimer;
@@ -40,7 +41,7 @@ public class ServerControlPanelWindowController implements Initializable, Contro
             @Override
             public void run() {
                 try {
-                    dataServer = new ServerSocket(ManagedServer.getServers().get("dataTransferServer").getPort());
+                    dataServer = new ServerSocket(ManagedServer.getServers().get(ServerType.DATA_TRANSFER_SERVER).getPort());
                     Socket accept = dataServer.accept();
                     DataInputStream dataInputStream = new DataInputStream(accept.getInputStream());
                     DataOutputStream dataOutputStream =
@@ -84,7 +85,7 @@ public class ServerControlPanelWindowController implements Initializable, Contro
 //                                    }
 //                                };
                                 screenAnimation = new AnimationTimer() {
-                                    ServerSocket serverSocket = new ServerSocket(ManagedServer.getServers().get("screenServer").getPort());
+                                    ServerSocket serverSocket = new ServerSocket(ManagedServer.getServers().get(ServerType.SCREEN_SERVER).getPort());
                                     Socket socket = null;
                                     ObjectInputStream objectInputStream = null;
                                     ByteOfImage byteOfImage = null;

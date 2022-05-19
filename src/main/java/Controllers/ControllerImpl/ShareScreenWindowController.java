@@ -6,6 +6,7 @@ import Core.KeyBoard.KeyBoard.KeyboardImpl.KeyPressed;
 import Core.KeyBoard.KeyBoard.KeyboardImpl.KeyReleased;
 import Core.KeyBoard.KeyBoardUtil.JavaFxKeyCodeRewrite;
 import Core.Manager.Server.ManagedServer;
+import Core.Manager.ServerType.ServerType;
 import Core.Mouse.Mouse.MouseImpl.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,7 +54,7 @@ public class ShareScreenWindowController implements Initializable, Controller {
             public void run() {
                 try {
                     //keyboard connection
-                    keyBoardServerSocket = new ServerSocket(ManagedServer.getServers().get("keyBoardServer").getPort());
+                    keyBoardServerSocket = new ServerSocket(ManagedServer.getServers().get(ServerType.KEYBOARD_SERVER).getPort());
                     keyBoardSocket = keyBoardServerSocket.accept();
                     keyBoardConnected = true;
                     keyBoardObjectOutputStream =
@@ -70,7 +71,7 @@ public class ShareScreenWindowController implements Initializable, Controller {
             public void run() {
                 try {
                     //mouse connection
-                    mouseServerSocket = new ServerSocket(ManagedServer.getServers().get("mouseServer").getPort());
+                    mouseServerSocket = new ServerSocket(ManagedServer.getServers().get(ServerType.MOUSE_SERVER).getPort());
                     mouseSocket = mouseServerSocket.accept();
                     mouseConnected = true;
                     mouseObjectOutputStream =

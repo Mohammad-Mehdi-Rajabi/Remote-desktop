@@ -2,6 +2,7 @@ package Controllers.ControllerImpl;
 
 
 import Controllers.Controller;
+import Core.Manager.ServerType.ServerType;
 import Core.Node.NodeImpl.Server;
 import Core.Util.Util;
 import javafx.beans.value.ChangeListener;
@@ -136,20 +137,20 @@ public class SetUpClientWindowController implements Initializable, Controller {
         IPWrongLbl.setVisible(false);
         ManagedClient.setPassword(passwordTxt.getText());
         ManagedClient.setIp(IPTxt.getText());
-        Map<String, Server> servers = ManagedClient.getServers();
+        Map<ServerType, Server> servers = ManagedClient.getServers();
         if (!portCheckBox.isSelected()) {
-            servers.put("screenServer", new Server(Integer.parseInt(portTxt.getText())));
-            servers.put("mouseServer", new Server(Integer.parseInt(portTxt.getText()) + 1));
-            servers.put("keyBoardServer", new Server(Integer.parseInt(portTxt.getText()) + 2));
-            servers.put("dataTransferServer", new Server(Integer.parseInt(portTxt.getText()) + 3));
+            servers.put(ServerType.SCREEN_SERVER, new Server(Integer.parseInt(portTxt.getText())));
+            servers.put(ServerType.MOUSE_SERVER, new Server(Integer.parseInt(portTxt.getText()) + 1));
+            servers.put(ServerType.KEYBOARD_SERVER, new Server(Integer.parseInt(portTxt.getText()) + 2));
+            servers.put(ServerType.DATA_TRANSFER_SERVER, new Server(Integer.parseInt(portTxt.getText()) + 3));
         } else {
-            servers.put("screenServer", new Server(Integer.parseInt(screenPortTxt.getText())));
-            servers.put("mouseServer", new Server(Integer.parseInt(mousePortTxt.getText())));
-            servers.put("keyBoardServer", new Server(Integer.parseInt(keyBoardPortTxt.getText())));
-            servers.put("dataTransferServer", new Server(Integer.parseInt(dataTransferPortTxt.getText())));
+            servers.put(ServerType.SCREEN_SERVER, new Server(Integer.parseInt(screenPortTxt.getText())));
+            servers.put(ServerType.MOUSE_SERVER, new Server(Integer.parseInt(mousePortTxt.getText())));
+            servers.put(ServerType.KEYBOARD_SERVER, new Server(Integer.parseInt(keyBoardPortTxt.getText())));
+            servers.put(ServerType.DATA_TRANSFER_SERVER, new Server(Integer.parseInt(dataTransferPortTxt.getText())));
         }
         try {
-            Socket socket = new Socket(IPTxt.getText(), servers.get("dataTransferServer").getPort());
+            Socket socket = new Socket(IPTxt.getText(), servers.get(ServerType.DATA_TRANSFER_SERVER).getPort());
             DataOutputStream dataOutputStream =
                     new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeUTF("password");

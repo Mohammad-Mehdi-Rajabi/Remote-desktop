@@ -1,5 +1,6 @@
 package Core.Manager.Server;
 
+import Core.Manager.ServerType.ServerType;
 import Core.Node.NodeImpl.Server;
 import Core.Property.IP;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Map;
 public class ManagedServer {
     private static String defaultPassword;
     private static List<IP> especialIpsList;
-    private static Map<String, Server> servers;
+    private static Map<ServerType, Server> servers;
 
 
     static {
@@ -48,11 +49,11 @@ public class ManagedServer {
         ManagedServer.especialIpsList = especialIpsList;
     }
 
-    public static Map<String, Server> getServers() {
+    public static Map<ServerType, Server> getServers() {
         return servers;
     }
 
-    public static void setServers(Map<String, Server> servers) {
+    public static void setServers(Map<ServerType, Server> servers) {
         ManagedServer.servers = servers;
     }
 }

@@ -1,5 +1,6 @@
 package Core.Manager.Client;
 
+import Core.Manager.ServerType.ServerType;
 import Core.Node.NodeImpl.Server;
 import Core.Util.Util;
 
@@ -12,7 +13,7 @@ import java.util.Map;
 public class ManagedClient {
     private static String password;
     private static String ip;
-    private static Map<String, Server> servers;
+    private static Map<ServerType, Server> servers;
 
     static {
         servers = new HashMap<>();
@@ -34,23 +35,23 @@ public class ManagedClient {
         ManagedClient.ip = ip;
     }
 
-    public static Map<String, Server> getServers() {
+    public static Map<ServerType, Server> getServers() {
         return servers;
     }
 
-    public static void setServers(Map<String, Server> servers) {
+    public static void setServers(Map<ServerType, Server> servers) {
         ManagedClient.servers = servers;
     }
 
     public static boolean sendPassword() {
         try {
-            Socket socket = new Socket(ip, servers.get("dataTransferServer").getPort());
+            Socket socket = new Socket(ip, servers.get(ServerType.DATA_TRANSFER_SERVER).getPort());
             DataOutputStream dataOutputStream =
                     new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeUTF(password);
             dataOutputStream.flush();
             dataOutputStream.close();
-            socket = new Socket(ip, servers.get("dataTransferServer").getPort());
+            socket = new Socket(ip, servers.get(ServerType.DATA_TRANSFER_SERVER).getPort());
             dataOutputStream =
                     new DataOutputStream(socket.getOutputStream());
             dataOutputStream.writeUTF(Util.getSystemIP());

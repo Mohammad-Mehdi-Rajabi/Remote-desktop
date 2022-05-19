@@ -3,6 +3,7 @@ package Controllers.ControllerImpl;
 import Controllers.Controller;
 import Core.KeyBoard.KeyBoard.Keyboard;
 import Core.Manager.Client.ManagedClient;
+import Core.Manager.ServerType.ServerType;
 import Core.Mouse.Mouse.Mouse;
 import Core.ScreenShot.Runnable.CaptureScreenShotWithMouseRunnable;
 import javafx.event.ActionEvent;
@@ -34,7 +35,7 @@ public class ClientControlPanelWindowController implements Initializable, Contro
         CaptureScreenShotWithMouseRunnable captureScreenShotWithMouseRunnable =
                 new CaptureScreenShotWithMouseRunnable();
         captureScreenShotWithMouseRunnable.setOutputStream(ManagedClient.getIp(),
-                ManagedClient.getServers().get("screenServer").getPort());
+                ManagedClient.getServers().get(ServerType.SCREEN_SERVER).getPort());
         screenThread = new Thread(captureScreenShotWithMouseRunnable);
         screenThread.start();
         mouseThread = new Thread(new Runnable() {
@@ -42,7 +43,7 @@ public class ClientControlPanelWindowController implements Initializable, Contro
             public void run() {
                 try {
                     Socket mouseSocket = new Socket(ManagedClient.getIp(),
-                            ManagedClient.getServers().get("mouseServer").getPort());
+                            ManagedClient.getServers().get(ServerType.MOUSE_SERVER).getPort());
                     ObjectInputStream objectInputStream =
                             new ObjectInputStream(mouseSocket.getInputStream());
                     while (true) {
@@ -64,7 +65,7 @@ public class ClientControlPanelWindowController implements Initializable, Contro
             public void run() {
                 try {
                     Socket keyBoardSocket = new Socket(ManagedClient.getIp(),
-                            ManagedClient.getServers().get("keyBoardServer").getPort());
+                            ManagedClient.getServers().get(ServerType.KEYBOARD_SERVER).getPort());
                     ObjectInputStream objectInputStream =
                             new ObjectInputStream(keyBoardSocket.getInputStream());
                     while (true) {
