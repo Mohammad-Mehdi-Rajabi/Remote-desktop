@@ -2,7 +2,7 @@ package Controllers.ControllerImpl;
 
 import Controllers.Controller;
 import Core.KeyBoard.KeyBoard.Keyboard;
-import Core.Manager.Client.ManagedClient;
+import Core.Manager.Client.ManagedClientStatic.ManagedClient;
 import Core.Manager.ServerType.ServerType;
 import Core.Mouse.Mouse.Mouse;
 import Core.ScreenShot.Runnable.CaptureScreenShotWithMouseRunnable;

@@ -2,11 +2,13 @@ package Core.Node.NodeImpl;
 
 import Core.Node.Node;
 
+import java.io.Serializable;
+
 /**
  * class Server for listening on a port
  * Interface: Core.Node
  */
-public class Server implements Node {
+public class Server implements Node, Serializable {
 
     private int port;
 

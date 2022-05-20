@@ -1,4 +1,4 @@
-package Core.Manager.Client;
+package Core.Manager.Client.ManagedClientStatic;
 
 import Core.Manager.ServerType.ServerType;
 import Core.Node.NodeImpl.Server;
@@ -15,8 +15,17 @@ public class ManagedClient {
     private static String ip;
     private static Map<ServerType, Server> servers;
 
+    private transient static Socket screenSocket;
+    private transient static Socket mouseSocket;
+    private transient static Socket keyBoardSocket;
+    private transient static Socket dataTransferSocket;
+
     static {
         servers = new HashMap<>();
+        screenSocket = null;
+        mouseSocket = null;
+        keyBoardSocket = null;
+        dataTransferSocket = null;
     }
 
     public static String getPassword() {
@@ -63,5 +72,37 @@ public class ManagedClient {
             return false;
         }
         return true;
+    }
+
+    public static Socket getScreenSocket() {
+        return screenSocket;
+    }
+
+    public static void setScreenSocket(Socket screenSocket) {
+        ManagedClient.screenSocket = screenSocket;
+    }
+
+    public static Socket getMouseSocket() {
+        return mouseSocket;
+    }
+
+    public static void setMouseSocket(Socket mouseSocket) {
+        ManagedClient.mouseSocket = mouseSocket;
+    }
+
+    public static Socket getKeyBoardSocket() {
+        return keyBoardSocket;
+    }
+
+    public static void setKeyBoardSocket(Socket keyBoardSocket) {
+        ManagedClient.keyBoardSocket = keyBoardSocket;
+    }
+
+    public static Socket getDataTransferSocket() {
+        return dataTransferSocket;
+    }
+
+    public static void setDataTransferSocket(Socket dataTransferSocket) {
+        ManagedClient.dataTransferSocket = dataTransferSocket;
     }
 }

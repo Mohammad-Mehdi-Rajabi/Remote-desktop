@@ -1,22 +1,34 @@
-package Core.Manager.Server;
+package Core.Manager.Server.ManagedServerStatic;
 
 import Core.Manager.ServerType.ServerType;
 import Core.Node.NodeImpl.Server;
 import Core.Property.IP;
+
+
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ManagedServer {
+public class ManagedServer  {
     private static String defaultPassword;
     private static List<IP> especialIpsList;
     private static Map<ServerType, Server> servers;
+
+    private  static Socket screenSocket;
+    private  static Socket mouseSocket;
+    private  static Socket keyBoardSocket;
+    private  static Socket dataTransferSocket;
 
 
     static {
         especialIpsList = new ArrayList<>();
         servers = new HashMap<>();
+        screenSocket = null;
+        mouseSocket = null;
+        keyBoardSocket = null;
+        dataTransferSocket = null;
     }
 
 
@@ -55,5 +67,37 @@ public class ManagedServer {
 
     public static void setServers(Map<ServerType, Server> servers) {
         ManagedServer.servers = servers;
+    }
+
+    public static Socket getScreenSocket() {
+        return screenSocket;
+    }
+
+    public static void setScreenSocket(Socket screenSocket) {
+        ManagedServer.screenSocket = screenSocket;
+    }
+
+    public static Socket getMouseSocket() {
+        return mouseSocket;
+    }
+
+    public static void setMouseSocket(Socket mouseSocket) {
+        ManagedServer.mouseSocket = mouseSocket;
+    }
+
+    public static Socket getKeyBoardSocket() {
+        return keyBoardSocket;
+    }
+
+    public static void setKeyBoardSocket(Socket keyBoardSocket) {
+        ManagedServer.keyBoardSocket = keyBoardSocket;
+    }
+
+    public static Socket getDataTransferSocket() {
+        return dataTransferSocket;
+    }
+
+    public static void setDataTransferSocket(Socket dataTransferSocket) {
+        ManagedServer.dataTransferSocket = dataTransferSocket;
     }
 }

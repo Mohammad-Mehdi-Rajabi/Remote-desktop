@@ -5,7 +5,7 @@ import Controllers.Controller;
 import Core.KeyBoard.KeyBoard.KeyboardImpl.KeyPressed;
 import Core.KeyBoard.KeyBoard.KeyboardImpl.KeyReleased;
 import Core.KeyBoard.KeyBoardUtil.JavaFxKeyCodeRewrite;
-import Core.Manager.Server.ManagedServer;
+import Core.Manager.Server.ManagedServerStatic.ManagedServer;
 import Core.Manager.ServerType.ServerType;
 import Core.Mouse.Mouse.MouseImpl.*;
 import javafx.fxml.FXML;

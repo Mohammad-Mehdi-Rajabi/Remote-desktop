@@ -2,24 +2,26 @@ package Controllers.ControllerImpl;
 
 
 import Controllers.Controller;
+import Core.Manager.Server.ManagedServerNonStatic.ManagedServer;
 import Core.Manager.ServerType.ServerType;
+import Core.Massage.Massage;
 import Core.Node.NodeImpl.Server;
+import Core.Property.IP;
 import Core.Util.Util;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import Core.Manager.Client.ManagedClient;
+import Core.Manager.Client.ManagedClientStatic.ManagedClient;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -53,9 +55,7 @@ public class SetUpClientWindowController implements Initializable, Controller {
     public Label keyBoardPortLbl;
     @FXML
     public Label dataTransferPortLbl;
-    @FXML
-    public Label wrongPasswordLbl;
-    public Label IPWrongLbl;
+
 
 
     @Override
@@ -126,15 +126,10 @@ public class SetUpClientWindowController implements Initializable, Controller {
             keyBoardPortLbl.setDisable(true);
             dataTransferPortLbl.setDisable(true);
         }
-        wrongPasswordLbl.setVisible(false);
-        wrongPasswordLbl.setText("your entry password was incorrect");
-        IPWrongLbl.setVisible(false);
-        IPWrongLbl.setText("IP was incorrect");
+
     }
 
     public void onActionJoinBtn(ActionEvent actionEvent) {
-        wrongPasswordLbl.setVisible(false);
-        IPWrongLbl.setVisible(false);
         ManagedClient.setPassword(passwordTxt.getText());
         ManagedClient.setIp(IPTxt.getText());
         Map<ServerType, Server> servers = ManagedClient.getServers();
@@ -151,55 +146,35 @@ public class SetUpClientWindowController implements Initializable, Controller {
         }
         try {
             Socket socket = new Socket(IPTxt.getText(), servers.get(ServerType.DATA_TRANSFER_SERVER).getPort());
-            DataOutputStream dataOutputStream =
-                    new DataOutputStream(socket.getOutputStream());
-            dataOutputStream.writeUTF("password");
-            dataOutputStream.flush();
+            ManagedClient.setDataTransferSocket(socket);
+            ObjectInputStream objectInputStream =
+                    new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream objectOutputStream =
+                    new ObjectOutputStream(socket.getOutputStream());
+            ManagedServer managedServer = (ManagedServer) objectInputStream.readObject();
+            if (managedServer.getEspecialIpsList().size() > 0) {
+                for (IP ip : managedServer.getEspecialIpsList()) {
+                    if (Util.getSystemIP().equals(ip.getIP()) && passwordTxt.getText().equals(ip.getPassword())) {
+                        objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
+                        Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
+                                "Control Panel", false);
+                    }else {
 
-            DataInputStream dataInputStream =
-                    new DataInputStream(socket.getInputStream());
-            String password = dataInputStream.readUTF();
-
-            dataOutputStream.writeUTF("IPList");
-            dataOutputStream.flush();
-            String countOfIP = dataInputStream.readUTF();
-            List<String> ipsAndPasswords = new ArrayList<>();
-            for (int i = 0; i < Integer.parseInt(countOfIP); i++) {
-                ipsAndPasswords.add(dataInputStream.readUTF());
-            }
-            if (ipsAndPasswords.size() == 0) {
-                if (password.equals(passwordTxt.getText())) {
-                    dataOutputStream.writeUTF("validPassword");
-                    dataOutputStream.flush();
-                    Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
-                            "Control Panel", false);
-                } else {
-                    wrongPasswordLbl.setVisible(true);
-                    socket.close();
-                }
-            } else {
-                String[] ipAndPassword;
-                for (String s : ipsAndPasswords) {
-                    ipAndPassword = s.split(" ");
-                    if (ipAndPassword[0].equals(Util.getSystemIP())) {
-                        if (ipAndPassword[1].equals(passwordTxt.getText())) {
-                            dataOutputStream.writeUTF("validPassword");
-                            dataOutputStream.flush();
-                            Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
-                                    "Control Panel", false);
-                        } else {
-                            wrongPasswordLbl.setVisible(true);
-                            socket.close();
-                        }
-                    } else {
-                        IPWrongLbl.setVisible(true);
-                        socket.close();
                     }
                 }
-            }
+            } else {
+                if (passwordTxt.getText().equals(managedServer.getDefaultPassword())){
+                    objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
+                    Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
+                            "Control Panel", false);
+                }else {
 
+                }
+            }
         } catch (IOException e) {
             //TODO something
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 

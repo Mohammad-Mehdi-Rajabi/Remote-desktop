@@ -5,7 +5,7 @@ import Core.Manager.ServerType.ServerType;
 import Core.Node.NodeImpl.Server;
 import Core.Property.IP;
 import Core.Util.Util;
-import Core.Manager.Server.ManagedServer;
+import Core.Manager.Server.ManagedServerStatic.ManagedServer;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
