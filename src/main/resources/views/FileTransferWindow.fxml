@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+
+<AnchorPane prefHeight="738.0" prefWidth="716.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ControllerImpl.ControllerImplFileTransferWindowController">
+   <children>
+      <TabPane fx:id="tabView" prefHeight="787.0" prefWidth="716.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="downloadTab" text="Doanload File">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="553.0" prefWidth="705.0">
+                     <children>
+                        <TreeView fx:id="fullTreeView" layoutX="15.0" layoutY="34.0" prefHeight="253.0" prefWidth="687.0" />
+                        <TreeView fx:id="distTreeView" layoutX="16.0" layoutY="322.0" prefHeight="234.0" prefWidth="686.0" />
+                        <Label layoutX="14.0" layoutY="299.0" text="Destination">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="10.0" layoutY="11.0" text="Select file to download">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="563.0" text="Logs" />
+                        <Button fx:id="downloadBtn" layoutX="27.0" layoutY="713.0" mnemonicParsing="false" onAction="#onActionDownloadBtn" prefHeight="25.0" prefWidth="80.0" stylesheets="@../styles/style.css" text="Download">
+                           <styleClass>
+                              <String fx:value="greenButton" />
+                              <String fx:value="greenButtonHover" />
+                           </styleClass>
+                        </Button>
+                        <WebView fx:id="logTab1BebView" layoutX="15.0" layoutY="582.0" prefHeight="120.0" prefWidth="685.0" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="uploadTab" text="Upload File">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TreeView fx:id="fullTreeViewTab2" layoutX="15.0" layoutY="34.0" prefHeight="253.0" prefWidth="687.0" />
+                        <TreeView fx:id="distTreeViewTab2" layoutX="16.0" layoutY="322.0" prefHeight="234.0" prefWidth="686.0" />
+                        <WebView fx:id="logWebviewTab2" layoutX="15.0" layoutY="582.0" prefHeight="120.0" prefWidth="685.0" />
+                        <Button fx:id="uploadBtnTab2" layoutX="27.0" layoutY="713.0" mnemonicParsing="false" onAction="#onActionUploadBtnTab2" prefHeight="25.0" prefWidth="63.0" stylesheets="@../styles/style.css" text="Upload">
+                           <styleClass>
+                              <String fx:value="greenButton" />
+                              <String fx:value="greenButtonHover" />
+                           </styleClass></Button>
+                         <Label layoutX="14.0" layoutY="299.0" text="Destination">
+                             <font>
+                                 <Font size="15.0" />
+                             </font>
+                         </Label>
+                         <Label layoutX="10.0" layoutY="11.0" text="Select file to upload">
+                             <font>
+                                 <Font size="15.0" />
+                             </font>
+                         </Label>
+                         <Label layoutX="14.0" layoutY="563.0" text="Logs" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class MouseSecondaryKey implements Mouse, Serializable {
+    public static final long serialVersionUID = 656547982101l;
 
     private transient Clicked clicked;
 

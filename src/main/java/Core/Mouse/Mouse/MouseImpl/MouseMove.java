@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class MouseMove implements Mouse , Serializable {
+    public static final long serialVersionUID = 61316548651111l;
     private double x;
     private double y;
     private double screenWidth;

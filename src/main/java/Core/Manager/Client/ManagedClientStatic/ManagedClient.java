@@ -6,6 +6,8 @@ import Core.Util.Util;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +21,8 @@ public class ManagedClient {
     private transient static Socket mouseSocket;
     private transient static Socket keyBoardSocket;
     private transient static Socket dataTransferSocket;
+    private transient static ObjectOutputStream dataTransferSocketObjectOutputStream;
+    private transient static ObjectInputStream dataTransferSocketObjectInputStream;
 
     static {
         servers = new HashMap<>();
@@ -26,6 +30,8 @@ public class ManagedClient {
         mouseSocket = null;
         keyBoardSocket = null;
         dataTransferSocket = null;
+        dataTransferSocketObjectOutputStream = null;
+        dataTransferSocketObjectInputStream = null;
     }
 
     public static String getPassword() {
@@ -104,5 +110,21 @@ public class ManagedClient {
 
     public static void setDataTransferSocket(Socket dataTransferSocket) {
         ManagedClient.dataTransferSocket = dataTransferSocket;
+    }
+
+    public static ObjectOutputStream getDataTransferSocketObjectOutputStream() {
+        return dataTransferSocketObjectOutputStream;
+    }
+
+    public static void setDataTransferSocketObjectOutputStream(ObjectOutputStream dataTransferSocketObjectOutputStream) {
+        ManagedClient.dataTransferSocketObjectOutputStream = dataTransferSocketObjectOutputStream;
+    }
+
+    public static ObjectInputStream getDataTransferSocketObjectInputStream() {
+        return dataTransferSocketObjectInputStream;
+    }
+
+    public static void setDataTransferSocketObjectInputStream(ObjectInputStream dataTransferSocketObjectInputStream) {
+        ManagedClient.dataTransferSocketObjectInputStream = dataTransferSocketObjectInputStream;
     }
 }

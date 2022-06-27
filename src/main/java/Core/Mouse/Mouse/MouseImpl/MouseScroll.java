@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class MouseScroll implements Mouse , Serializable {
+    public static final long serialVersionUID = 31654690l;
     private double deltaY;
     private transient Scroll scroll;
 

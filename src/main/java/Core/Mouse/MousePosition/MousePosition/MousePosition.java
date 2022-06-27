@@ -7,6 +7,7 @@ import java.io.Serializable;
  * this class calculate mouse position
  */
 public class MousePosition implements Serializable {
+    public static final long serialVersionUID = 1234567890l;
 
     private double X;
     private double Y;

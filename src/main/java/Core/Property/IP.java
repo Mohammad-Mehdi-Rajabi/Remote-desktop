@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import java.io.Serializable;
 
 public class IP implements Serializable {
+    public static final long serialVersionUID = 10009l;
     private transient SimpleStringProperty IP;
     private transient SimpleStringProperty password;
     private String IPString;

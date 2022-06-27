@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 public class ByteOfImage implements Serializable {
+    public static final long serialVersionUID = 6613000865l;
     byte[] byteOfImage;
 
     public ByteOfImage(BufferedImage bufferedImage) throws IOException {

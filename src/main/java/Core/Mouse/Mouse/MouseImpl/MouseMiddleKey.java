@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class MouseMiddleKey implements Mouse, Serializable {
+    public static final long serialVersionUID = 6613112654865l;
     private transient Clicked clicked;
 
     public MouseMiddleKey() {

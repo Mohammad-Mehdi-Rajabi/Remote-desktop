@@ -144,7 +144,9 @@ public class ShareScreenWindowController implements Initializable, Controller {
     }
 
     public static void onKeyReleasedScene(KeyEvent keyEvent) {
-        if(keyBoardConnected) {
+        if (keyEvent.getCode() == KeyCode.WINDOWS)
+            return;
+        if (keyBoardConnected) {
             try {
                 keyBoardObjectOutputStream.writeObject(
                         new KeyReleased(JavaFxKeyCodeRewrite.KeyCode.getCode(keyEvent.getCode().getName()))
@@ -158,7 +160,9 @@ public class ShareScreenWindowController implements Initializable, Controller {
     }
 
     public static void onKeyPressedScene(KeyEvent keyEvent) {
-        if(keyBoardConnected) {
+        if (keyEvent.getCode() == KeyCode.WINDOWS)
+            return;
+        if (keyBoardConnected) {
             try {
                 keyBoardObjectOutputStream.writeObject(
                         new KeyPressed(JavaFxKeyCodeRewrite.KeyCode.getCode(keyEvent.getCode().getName()))

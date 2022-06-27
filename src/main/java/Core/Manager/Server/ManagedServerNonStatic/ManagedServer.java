@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ManagedServer implements Serializable {
+    public static final long serialVersionUID = 650000888l;
     private String defaultPassword;
     private List<IP> especialIpsList;
     private transient Map<ServerType, Server> servers;

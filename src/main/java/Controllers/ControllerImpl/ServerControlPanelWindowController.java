@@ -6,6 +6,8 @@ import Core.Image.ByteOfImage.ByteOfImage;
 import Core.Manager.ServerType.ServerType;
 import Core.Manager.Server.ManagedServerStatic.ManagedServer;
 import Core.Massage.Massage;
+import Core.ScreenShot.CaptureScreenShotWithMouse;
+import Core.Util.Util;
 import javafx.animation.AnimationTimer;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
@@ -32,6 +34,7 @@ public class ServerControlPanelWindowController implements Initializable, Contro
     private static AnimationTimer screenAnimation;
     private static ServerSocket dataServer;
 
+
     public void onActionStopBtn(ActionEvent actionEvent) {
 
     }
@@ -43,17 +46,16 @@ public class ServerControlPanelWindowController implements Initializable, Contro
             public void run() {
                 try {
                     dataServer = new ServerSocket(ManagedServer.getServers().get(ServerType.DATA_TRANSFER_SERVER).getPort());
-                    ManagedServer.setDataTransferSocket(dataServer.accept());
-                    Socket accept = ManagedServer.getDataTransferSocket();
-                        ObjectOutputStream objectOutputStream =
-                                new ObjectOutputStream(accept.getOutputStream());
-                        ObjectInputStream objectInputStream=
-                                new ObjectInputStream(accept.getInputStream());
-                        objectOutputStream.writeObject(new Core.Manager.Server.ManagedServerNonStatic.ManagedServer());
-                        objectOutputStream.flush();
+                    Socket accept = dataServer.accept();
+                    ObjectOutputStream objectOutputStream =
+                            new ObjectOutputStream(accept.getOutputStream());
+                    ObjectInputStream objectInputStream =
+                            new ObjectInputStream(accept.getInputStream());
+                    objectOutputStream.writeObject(new Core.Manager.Server.ManagedServerNonStatic.ManagedServer());
+                    objectOutputStream.flush();
 
                     while (true) {
-                        Massage massage= (Massage) objectInputStream.readObject();
+                        Massage massage = (Massage) objectInputStream.readObject();
                         if (massage.getMassage().equals(Massage.MassageType.VALID_PASSWORD.getMassage())) {
                             try {
                                 screenAnimation = new AnimationTimer() {
@@ -83,8 +85,13 @@ public class ServerControlPanelWindowController implements Initializable, Contro
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            dataServer.close();
+                            break;
                         }
+
                     }
+                    dataServer = new ServerSocket(ManagedServer.getServers().get(ServerType.DATA_TRANSFER_SERVER).getPort());
+                    ManagedServer.setDataTransferSocket(dataServer.accept());
                 } catch (IOException e) {
                     //TODO something
                     e.printStackTrace();
@@ -98,13 +105,15 @@ public class ServerControlPanelWindowController implements Initializable, Contro
 
 
     public void onActionDataTransferBtn(ActionEvent actionEvent) {
-
+        Util.openWindow(getClass().getClassLoader().getResource("views/FileTransferWindow.fxml"),
+                "File Transfer", false);
     }
 
 
     public void startRemoteDesktop() {
 
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

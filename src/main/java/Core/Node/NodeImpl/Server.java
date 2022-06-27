@@ -9,6 +9,7 @@ import java.io.Serializable;
  * Interface: Core.Node
  */
 public class Server implements Node, Serializable {
+    public static final long serialVersionUID = 9863574210000l;
 
     private int port;
 

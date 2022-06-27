@@ -19,7 +19,8 @@ public class Main extends Application {
         stage.centerOnScreen();
         stage.setResizable(false);
         stage.setAlwaysOnTop(true);
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Views/MainWindow.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/MainWindow.fxml"));
+        //Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("views/FileTransferWindow.fxml"));
         primaryStage.setScene(new Scene(root));
         /*primaryStage.getIcons().add(SwingFXUtils.toFXImage(
                 ImageIO.read(

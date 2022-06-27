@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class KeyReleased implements Keyboard, Serializable {
+    public static final long serialVersionUID = 23865l;
     private transient KeyRelease keyRelease;
     private int keyCode;
 

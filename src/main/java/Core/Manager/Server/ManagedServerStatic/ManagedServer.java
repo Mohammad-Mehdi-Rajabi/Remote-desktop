@@ -5,6 +5,8 @@ import Core.Node.NodeImpl.Server;
 import Core.Property.IP;
 
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,8 @@ public class ManagedServer  {
     private  static Socket mouseSocket;
     private  static Socket keyBoardSocket;
     private  static Socket dataTransferSocket;
+    private transient static ObjectOutputStream dataTransferSocketObjectOutputStream;
+    private transient static ObjectInputStream dataTransferSocketObjectInputStream;
 
 
     static {
@@ -29,6 +33,8 @@ public class ManagedServer  {
         mouseSocket = null;
         keyBoardSocket = null;
         dataTransferSocket = null;
+        dataTransferSocketObjectOutputStream = null;
+        dataTransferSocketObjectInputStream = null;
     }
 
 
@@ -99,5 +105,21 @@ public class ManagedServer  {
 
     public static void setDataTransferSocket(Socket dataTransferSocket) {
         ManagedServer.dataTransferSocket = dataTransferSocket;
+    }
+
+    public static ObjectOutputStream getDataTransferSocketObjectOutputStream() {
+        return dataTransferSocketObjectOutputStream;
+    }
+
+    public static void setDataTransferSocketObjectOutputStream(ObjectOutputStream dataTransferSocketObjectOutputStream) {
+        ManagedServer.dataTransferSocketObjectOutputStream = dataTransferSocketObjectOutputStream;
+    }
+
+    public static ObjectInputStream getDataTransferSocketObjectInputStream() {
+        return dataTransferSocketObjectInputStream;
+    }
+
+    public static void setDataTransferSocketObjectInputStream(ObjectInputStream dataTransferSocketObjectInputStream) {
+        ManagedServer.dataTransferSocketObjectInputStream = dataTransferSocketObjectInputStream;
     }
 }

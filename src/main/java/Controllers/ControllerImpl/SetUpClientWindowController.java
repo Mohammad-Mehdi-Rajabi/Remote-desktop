@@ -57,7 +57,6 @@ public class SetUpClientWindowController implements Initializable, Controller {
     public Label dataTransferPortLbl;
 
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         /**
@@ -151,26 +150,28 @@ public class SetUpClientWindowController implements Initializable, Controller {
                     new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(socket.getOutputStream());
-            ManagedServer managedServer = (ManagedServer) objectInputStream.readObject();
-            if (managedServer.getEspecialIpsList().size() > 0) {
-                for (IP ip : managedServer.getEspecialIpsList()) {
-                    if (Util.getSystemIP().equals(ip.getIP()) && passwordTxt.getText().equals(ip.getPassword())) {
+                ManagedServer managedServer = (ManagedServer) objectInputStream.readObject();
+                if (managedServer.getEspecialIpsList().size() > 0) {
+                    for (IP ip : managedServer.getEspecialIpsList()) {
+                        if (Util.getSystemIP().equals(ip.getIP()) && passwordTxt.getText().equals(ip.getPassword())) {
+                            objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
+                            Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
+                                    "Control Panel", false);
+                            socket.close();
+                        } else {
+
+                        }
+                    }
+                } else {
+                    if (passwordTxt.getText().equals(managedServer.getDefaultPassword())) {
                         objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
                         Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
                                 "Control Panel", false);
-                    }else {
+                        socket.close();
+                    } else {
 
                     }
                 }
-            } else {
-                if (passwordTxt.getText().equals(managedServer.getDefaultPassword())){
-                    objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
-                    Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
-                            "Control Panel", false);
-                }else {
-
-                }
-            }
         } catch (IOException e) {
             //TODO something
             e.printStackTrace();

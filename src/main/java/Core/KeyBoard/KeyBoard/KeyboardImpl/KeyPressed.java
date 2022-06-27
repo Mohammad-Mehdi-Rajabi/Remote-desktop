@@ -7,6 +7,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class KeyPressed implements Keyboard, Serializable {
+    public static final long serialVersionUID = 129654865l;
     private transient KeyPress keyPress;
     private int keyCode;
 
