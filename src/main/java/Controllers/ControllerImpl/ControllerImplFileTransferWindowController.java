@@ -2,6 +2,7 @@ package Controllers.ControllerImpl;
 
 import Controllers.Controller;
 import Core.File.ByteOfFile.ByteOfFile;
+import Core.File.FileList.FileList;
 import Core.Manager.Server.ManagedServerStatic.ManagedServer;
 import Core.Massage.Massage;
 import javafx.beans.value.ChangeListener;
@@ -18,6 +19,7 @@ import javafx.scene.web.WebView;
 
 import javax.imageio.ImageIO;
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -104,84 +106,134 @@ public class ControllerImplFileTransferWindowController implements Controller, I
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initClientTreeView = new Thread(new Runnable() {
+//        initClientTreeView = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+        ImageView client = new ImageView();
+        try {
+            client.setImage(
+                    SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/clientIcon.png").toURI().toURL()),
+                            null)
+            );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        //File[] files = null;
+        FileList files = null;
+        TreeItem<String> base = new TreeItem<String>("Client files", client);
+        base.setExpanded(true);
+        fullTreeView.setRoot(base);
+        Socket accept = null;
+        try {
+            accept = ManagedServer.getDataTransferSocket();
+            objectOutputStream =
+                    new ObjectOutputStream(accept.getOutputStream());
+            objectInputStream =
+                    new ObjectInputStream(accept.getInputStream());
+            objectOutputStream.writeObject(new Massage(Massage.MassageType.GET_ROOT_OF_FILES));
+            objectOutputStream.flush();
+            if (((Massage) objectInputStream.readObject()).getMassage().equals(Massage.MassageType.SENDING_ROOT_OF_FILES.getMassage())) {
+                Object o = objectInputStream.readObject();
+                files = (FileList) o;
+                TreeItem<String> finalBase = base;
+                files.getFileList().forEach((key, value) -> {
+                    TreeItem<String> item = new TreeItem<String>(key);
+                    ImageView folder1 = new ImageView();
+                    try {
+                        folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                        getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+                                null));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ImageView file = new ImageView();
+                    try {
+                        file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                        getResource("images/files (1).png").toURI().toURL()),
+                                null));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (value) {
+                        item.setExpanded(true);
+                        item.setGraphic(folder1);
+                    } else {
+                        item.setExpanded(false);
+                        item.setGraphic(file);
+                    }
+
+                    finalBase.getChildren().add(item);
+                });
+//                for (File f : files.getFileList()) {
+//                    TreeItem<String> item = new TreeItem<String>(f.getPath());
+//                    ImageView folder1 = new ImageView();
+//                    try {
+//                        folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                        getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+//                                null));
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (URISyntaxException e) {
+//                        e.printStackTrace();
+//                    }
+//                    ImageView file = new ImageView();
+//                    try {
+//                        file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                        getResource("images/files (1).png").toURI().toURL()),
+//                                null));
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (URISyntaxException e) {
+//                        e.printStackTrace();
+//                    }
+//                    if (f.isDirectory()) {
+//                        item.setExpanded(true);
+//                        item.setGraphic(folder1);
+//                    } else {
+//                        item.setExpanded(false);
+//                        item.setGraphic(file);
+//                    }
+//
+//                    base.getChildren().add(item);
+//                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        fullTreeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
             @Override
-            public void run() {
-                ImageView client = new ImageView();
-                try {
-                    client.setImage(
-                            SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/clientIcon.png").toURI().toURL()),
-                                    null)
-                    );
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                File[] files = null;
-                TreeItem<String> base = new TreeItem<String>("Client files", client);
-                base.setExpanded(true);
-                fullTreeView.setRoot(base);
-                Socket accept = null;
-                try {
-                    accept = ManagedServer.getDataTransferSocket();
-                    objectOutputStream =
-                            new ObjectOutputStream(accept.getOutputStream());
-                    objectInputStream =
-                            new ObjectInputStream(accept.getInputStream());
-                    objectOutputStream.writeObject(new Massage(Massage.MassageType.GET_ROOT_OF_FILES));
-                    objectOutputStream.flush();
-                    if (((Massage) objectInputStream.readObject()).getMassage().equals(Massage.MassageType.SENDING_ROOT_OF_FILES.getMassage())) {
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                TreeItem<String> selectedItem = (TreeItem<String>) newValue;
+                if (selectedItem.isExpanded()) {
+                    //--------
+                    try {
+                        objectOutputStream.writeObject(new Massage(Massage.MassageType.GET_FILES, selectedItem.getValue()));
+                        objectOutputStream.flush();
                         Object o = objectInputStream.readObject();
-                        files = (File[]) o;
-
-                        for (File f : files) {
-                            TreeItem<String> item = new TreeItem<String>(f.getPath());
-                            ImageView folder1 = new ImageView();
-                            try {
-                                folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                                getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
-                                        null));
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
-                            ImageView file = new ImageView();
-                            try {
-                                file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                                getResource("images/files (1).png").toURI().toURL()),
-                                        null));
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                            }
-                            if (f.isDirectory()) {
-                                item.setExpanded(true);
-                                item.setGraphic(folder1);
-                            } else {
-                                item.setExpanded(false);
-                                item.setGraphic(file);
-                            }
-
-                            base.getChildren().add(item);
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
-                fullTreeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                        TreeItem<String> selectedItem = (TreeItem<String>) newValue;
-                        if (selectedItem.isExpanded()) {
-                            for (File f : new File(selectedItem.getValue()).listFiles()) {
-                                TreeItem<String> item = new TreeItem<String>(f.getPath());
+                        Massage massage = (Massage) o;
+                        if (massage.getMassage().equals(Massage.MassageType.SENDING_FILES.getMassage())) {
+                            Object o1 = objectInputStream.readObject();
+                            FileList fileList = (FileList) o1;
+                            fileList.getFileList().forEach((key, value) -> {
+                                TreeItem<String> item = new TreeItem<String>(key);
                                 ImageView folder1 = new ImageView();
                                 try {
                                     folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
@@ -206,7 +258,7 @@ public class ControllerImplFileTransferWindowController implements Controller, I
                                 } catch (URISyntaxException e) {
                                     e.printStackTrace();
                                 }
-                                if (f.isDirectory()) {
+                                if (value) {
                                     item.setExpanded(true);
                                     item.setGraphic(folder1);
                                 } else {
@@ -215,202 +267,175 @@ public class ControllerImplFileTransferWindowController implements Controller, I
                                 }
 
                                 selectedItem.getChildren().add(item);
-
-                            }
+                            });
+//                            for (File f : ((File) o1).listFiles()) {
+//                                TreeItem<String> item = new TreeItem<String>(f.getPath());
+//                                ImageView folder1 = new ImageView();
+//                                try {
+//                                    folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                                    getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+//                                            null));
+//                                } catch (FileNotFoundException e) {
+//                                    e.printStackTrace();
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                } catch (URISyntaxException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                ImageView file = new ImageView();
+//                                try {
+//                                    file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                                    getResource("images/files (1).png").toURI().toURL()),
+//                                            null));
+//                                } catch (FileNotFoundException e) {
+//                                    e.printStackTrace();
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                } catch (URISyntaxException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                if (f.isDirectory()) {
+//                                    item.setExpanded(true);
+//                                    item.setGraphic(folder1);
+//                                } else {
+//                                    item.setExpanded(false);
+//                                    item.setGraphic(file);
+//                                }
+//
+//                                selectedItem.getChildren().add(item);
+//
+//                            }
                         }
-                    }
-                });
-
-                fullTreeView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
-                    @Override
-                    public void onChanged(Change<? extends TreeItem> change) {
-                        ObservableList<TreeItem<String>> selectedItems = fullTreeView.getSelectionModel().getSelectedItems();
-                        String s = selectedItems.get(0).toString();
-                        s = removeByIndex(s, 0, 18);
-                        s = removeByIndex(s, s.length() - 2, s.length());
-                        filePathToDownload = s;
-                    }
-                });
-                //--------upload tree view init
-                client = new ImageView();
-                try {
-                    client.setImage(
-                            SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/clientIcon.png").toURI().toURL()),
-                                    null)
-                    );
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                base = new TreeItem<String>("Client files", client);
-                base.setExpanded(true);
-                try {
-                    distTreeViewTab2.setRoot(base);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                for (File f : files) {
-                    TreeItem<String> item = new TreeItem<String>(f.getPath());
-                    ImageView folder1 = new ImageView();
-                    try {
-                        folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                        getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
-                                null));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } catch (URISyntaxException e) {
+                    } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-                    ImageView file = new ImageView();
-                    try {
-                        file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                        getResource("images/files (1).png").toURI().toURL()),
-                                null));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    if (f.isDirectory()) {
-                        item.setExpanded(true);
-                        item.setGraphic(folder1);
-                    } else {
-                        item.setExpanded(false);
-                        item.setGraphic(file);
-                    }
+                    //--------------
 
-                    base.getChildren().add(item);
                 }
-                distTreeViewTab2.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                        TreeItem<String> selectedItem = (TreeItem<String>) newValue;
-                        if (selectedItem.isExpanded()) {
-                            for (File f : new File(selectedItem.getValue()).listFiles()) {
-                                TreeItem<String> item = new TreeItem<String>(f.getPath());
-                                ImageView folder1 = new ImageView();
-                                try {
-                                    folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                                    getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
-                                            null));
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (URISyntaxException e) {
-                                    e.printStackTrace();
-                                }
-                                ImageView file = new ImageView();
-                                try {
-                                    file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                                    getResource("images/files (1).png").toURI().toURL()),
-                                            null));
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (URISyntaxException e) {
-                                    e.printStackTrace();
-                                }
-                                if (f.isDirectory()) {
-                                    item.setExpanded(true);
-                                    item.setGraphic(folder1);
-                                } else {
-                                    item.setExpanded(false);
-                                    item.setGraphic(file);
-                                }
-
-                                selectedItem.getChildren().add(item);
-
-                            }
-                        }
-                    }
-                });
-
-                distTreeViewTab2.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
-                    @Override
-                    public void onChanged(Change<? extends TreeItem> change) {
-                        ObservableList<TreeItem<String>> selectedItems = distTreeViewTab2.getSelectionModel().getSelectedItems();
-                        String s = selectedItems.get(0).toString();
-                        s = removeByIndex(s, 0, 18);
-                        s = removeByIndex(s, s.length() - 2, s.length());
-                        filePathToSaveUploadFile = s;
-                    }
-                });
             }
         });
-        initServerTreeView = new Thread(new Runnable() {
+
+        fullTreeView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
             @Override
-            public void run() {
+            public void onChanged(Change<? extends TreeItem> change) {
+                ObservableList<TreeItem<String>> selectedItems = fullTreeView.getSelectionModel().getSelectedItems();
+                String s = selectedItems.get(0).toString();
+                s = removeByIndex(s, 0, 18);
+                s = removeByIndex(s, s.length() - 2, s.length());
+                filePathToDownload = s;
+            }
+        });
+        //--------upload tree view init
+        client = new ImageView();
+        try {
+            client.setImage(
+                    SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/clientIcon.png").toURI().toURL()),
+                            null)
+            );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        base = new TreeItem<String>("Client files", client);
+        base.setExpanded(true);
+        try {
+            distTreeViewTab2.setRoot(base);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        TreeItem<String> finalBase1 = base;
+        files.getFileList().forEach((key, value) -> {
+            TreeItem<String> item = new TreeItem<String>(key);
+            ImageView folder1 = new ImageView();
+            try {
+                folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+                        null));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            ImageView file = new ImageView();
+            try {
+                file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                getResource("images/files (1).png").toURI().toURL()),
+                        null));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            if (value) {
+                item.setExpanded(true);
+                item.setGraphic(folder1);
+            } else {
+                item.setExpanded(false);
+                item.setGraphic(file);
+            }
 
-                ImageView client = new ImageView();
-                try {
-                    client.setImage(
-                            SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/pcIcon.png").toURI().toURL()),
-                                    null)
-                    );
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                File[] files = File.listRoots();
-                TreeItem<String> base = new TreeItem<String>("PC files", client);
-                base.setExpanded(true);
-                distTreeView.setRoot(base);
-                for (File f : files) {
-                    TreeItem<String> item = new TreeItem<String>(f.getPath());
-                    ImageView folder1 = new ImageView();
+            finalBase1.getChildren().add(item);
+        });
+//        for (File f : files) {
+//            TreeItem<String> item = new TreeItem<String>(f.getPath());
+//            ImageView folder1 = new ImageView();
+//            try {
+//                folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+//                        null));
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+//            ImageView file = new ImageView();
+//            try {
+//                file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                getResource("images/files (1).png").toURI().toURL()),
+//                        null));
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } catch (URISyntaxException e) {
+//                e.printStackTrace();
+//            }
+//            if (f.isDirectory()) {
+//                item.setExpanded(true);
+//                item.setGraphic(folder1);
+//            } else {
+//                item.setExpanded(false);
+//                item.setGraphic(file);
+//            }
+//
+//            base.getChildren().add(item);
+//        }
+        distTreeViewTab2.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                TreeItem<String> selectedItem = (TreeItem<String>) newValue;
+                if (selectedItem.isExpanded()) {
                     try {
-                        folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                        getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
-                                null));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    ImageView file = new ImageView();
-                    try {
-                        file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                        getResource("images/files (1).png").toURI().toURL()),
-                                null));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    if (f.isDirectory()) {
-                        item.setExpanded(true);
-                        item.setGraphic(folder1);
-                    } else {
-                        item.setExpanded(false);
-                        item.setGraphic(file);
-                    }
-
-                    base.getChildren().add(item);
-                }
-                distTreeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                        TreeItem<String> selectedItem = (TreeItem<String>) newValue;
-                        if (selectedItem.isExpanded()) {
-                            for (File f : new File(selectedItem.getValue()).listFiles()) {
-                                TreeItem<String> item = new TreeItem<String>(f.getPath());
+                        objectOutputStream.writeObject(new Massage(Massage.MassageType.GET_FILES, selectedItem.getValue()));
+                        objectOutputStream.flush();
+                        Object o = objectInputStream.readObject();
+                        Massage massage = (Massage) o;
+                        if (massage.getMassage().equals(Massage.MassageType.SENDING_FILES.getMassage())) {
+                            Object o1 = objectInputStream.readObject();
+                            FileList fileList = (FileList) o1;
+                            fileList.getFileList().forEach((key, value) -> {
+                                TreeItem<String> item = new TreeItem<String>(key);
                                 ImageView folder1 = new ImageView();
                                 try {
                                     folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
@@ -435,7 +460,7 @@ public class ControllerImplFileTransferWindowController implements Controller, I
                                 } catch (URISyntaxException e) {
                                     e.printStackTrace();
                                 }
-                                if (f.isDirectory()) {
+                                if (value) {
                                     item.setExpanded(true);
                                     item.setGraphic(folder1);
                                 } else {
@@ -444,136 +469,295 @@ public class ControllerImplFileTransferWindowController implements Controller, I
                                 }
 
                                 selectedItem.getChildren().add(item);
-
-                            }
+                            });
                         }
-                    }
-                });
-
-                distTreeView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
-                    @Override
-                    public void onChanged(Change<? extends TreeItem> change) {
-                        ObservableList<TreeItem<String>> selectedItems = distTreeView.getSelectionModel().getSelectedItems();
-                        String s = selectedItems.get(0).toString();
-                        s = removeByIndex(s, 0, 18);
-                        s = removeByIndex(s, s.length() - 2, s.length());
-                        filePathToSave = s;
-                    }
-                });
-                //--------------------------------------
-                client = new ImageView();
-                try {
-                    client.setImage(
-                            SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/pcIcon.png").toURI().toURL()),
-                                    null)
-                    );
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                base = new TreeItem<String>("PC files", client);
-                base.setExpanded(true);
-                fullTreeViewTab2.setRoot(base);
-                for (File f : files) {
-                    TreeItem<String> item = new TreeItem<String>(f.getPath());
-                    ImageView folder1 = new ImageView();
-                    try {
-                        folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                        getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
-                                null));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } catch (URISyntaxException e) {
+                    } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
-                    ImageView file = new ImageView();
-                    try {
-                        file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                        getResource("images/files (1).png").toURI().toURL()),
-                                null));
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    if (f.isDirectory()) {
-                        item.setExpanded(true);
-                        item.setGraphic(folder1);
-                    } else {
-                        item.setExpanded(false);
-                        item.setGraphic(file);
-                    }
-
-                    base.getChildren().add(item);
+//                    for (File f : new File(selectedItem.getValue()).listFiles()) {
+//                        TreeItem<String> item = new TreeItem<String>(f.getPath());
+//                        ImageView folder1 = new ImageView();
+//                        try {
+//                            folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                            getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+//                                    null));
+//                        } catch (FileNotFoundException e) {
+//                            e.printStackTrace();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        } catch (URISyntaxException e) {
+//                            e.printStackTrace();
+//                        }
+//                        ImageView file = new ImageView();
+//                        try {
+//                            file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+//                                            getResource("images/files (1).png").toURI().toURL()),
+//                                    null));
+//                        } catch (FileNotFoundException e) {
+//                            e.printStackTrace();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        } catch (URISyntaxException e) {
+//                            e.printStackTrace();
+//                        }
+//                        if (f.isDirectory()) {
+//                            item.setExpanded(true);
+//                            item.setGraphic(folder1);
+//                        } else {
+//                            item.setExpanded(false);
+//                            item.setGraphic(file);
+//                        }
+//
+//                        selectedItem.getChildren().add(item);
+//
+//                    }
                 }
-                fullTreeViewTab2.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                        TreeItem<String> selectedItem = (TreeItem<String>) newValue;
-                        if (selectedItem.isExpanded()) {
-                            for (File f : new File(selectedItem.getValue()).listFiles()) {
-                                TreeItem<String> item = new TreeItem<String>(f.getPath());
-                                ImageView folder1 = new ImageView();
-                                try {
-                                    folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                                    getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
-                                            null));
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (URISyntaxException e) {
-                                    e.printStackTrace();
-                                }
-                                ImageView file = new ImageView();
-                                try {
-                                    file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
-                                                    getResource("images/files (1).png").toURI().toURL()),
-                                            null));
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                } catch (URISyntaxException e) {
-                                    e.printStackTrace();
-                                }
-                                if (f.isDirectory()) {
-                                    item.setExpanded(true);
-                                    item.setGraphic(folder1);
-                                } else {
-                                    item.setExpanded(false);
-                                    item.setGraphic(file);
-                                }
-
-                                selectedItem.getChildren().add(item);
-
-                            }
-                        }
-                    }
-                });
-
-                fullTreeViewTab2.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
-                    @Override
-                    public void onChanged(Change<? extends TreeItem> change) {
-                        ObservableList<TreeItem<String>> selectedItems = fullTreeViewTab2.getSelectionModel().getSelectedItems();
-                        String s = selectedItems.get(0).toString();
-                        s = removeByIndex(s, 0, 18);
-                        s = removeByIndex(s, s.length() - 2, s.length());
-                        filePathOfUploadFile = s;
-                    }
-                });
             }
         });
 
-        initClientTreeView.start();
-        initServerTreeView.start();
+        distTreeViewTab2.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
+            @Override
+            public void onChanged(Change<? extends TreeItem> change) {
+                ObservableList<TreeItem<String>> selectedItems = distTreeViewTab2.getSelectionModel().getSelectedItems();
+                String s = selectedItems.get(0).toString();
+                s = removeByIndex(s, 0, 18);
+                s = removeByIndex(s, s.length() - 2, s.length());
+                filePathToSaveUploadFile = s;
+            }
+        });
+//            }
+//        });
+//        initServerTreeView = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+
+        /*ImageView*/
+        client = new ImageView();
+        try {
+            client.setImage(
+                    SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/pcIcon.png").toURI().toURL()),
+                            null)
+            );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        File[] files1 = File.listRoots();
+        /*TreeItem<String>*/
+        base = new TreeItem<String>("PC files", client);
+        base.setExpanded(true);
+        distTreeView.setRoot(base);
+        for (File f : files1) {
+            TreeItem<String> item = new TreeItem<String>(f.getPath());
+            ImageView folder1 = new ImageView();
+            try {
+                folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+                        null));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            ImageView file = new ImageView();
+            try {
+                file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                getResource("images/files (1).png").toURI().toURL()),
+                        null));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            if (f.isDirectory()) {
+                item.setExpanded(true);
+                item.setGraphic(folder1);
+            } else {
+                item.setExpanded(false);
+                item.setGraphic(file);
+            }
+
+            base.getChildren().add(item);
+        }
+        distTreeView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                TreeItem<String> selectedItem = (TreeItem<String>) newValue;
+                if (selectedItem.isExpanded()) {
+                    for (File f : new File(selectedItem.getValue()).listFiles()) {
+                        TreeItem<String> item = new TreeItem<String>(f.getPath());
+                        ImageView folder1 = new ImageView();
+                        try {
+                            folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                            getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+                                    null));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                        ImageView file = new ImageView();
+                        try {
+                            file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                            getResource("images/files (1).png").toURI().toURL()),
+                                    null));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                        if (f.isDirectory()) {
+                            item.setExpanded(true);
+                            item.setGraphic(folder1);
+                        } else {
+                            item.setExpanded(false);
+                            item.setGraphic(file);
+                        }
+
+                        selectedItem.getChildren().add(item);
+
+                    }
+                }
+            }
+        });
+
+        distTreeView.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
+            @Override
+            public void onChanged(Change<? extends TreeItem> change) {
+                ObservableList<TreeItem<String>> selectedItems = distTreeView.getSelectionModel().getSelectedItems();
+                String s = selectedItems.get(0).toString();
+                s = removeByIndex(s, 0, 18);
+                s = removeByIndex(s, s.length() - 2, s.length());
+                filePathToSave = s;
+            }
+        });
+        //--------------------------------------
+        client = new ImageView();
+        try {
+            client.setImage(
+                    SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().getResource("images/pcIcon.png").toURI().toURL()),
+                            null)
+            );
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        base = new TreeItem<String>("PC files", client);
+        base.setExpanded(true);
+        fullTreeViewTab2.setRoot(base);
+        for (File f : files1) {
+            TreeItem<String> item = new TreeItem<String>(f.getPath());
+            ImageView folder1 = new ImageView();
+            try {
+                folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+                        null));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            ImageView file = new ImageView();
+            try {
+                file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                getResource("images/files (1).png").toURI().toURL()),
+                        null));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            if (f.isDirectory()) {
+                item.setExpanded(true);
+                item.setGraphic(folder1);
+            } else {
+                item.setExpanded(false);
+                item.setGraphic(file);
+            }
+
+            base.getChildren().add(item);
+        }
+        fullTreeViewTab2.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                TreeItem<String> selectedItem = (TreeItem<String>) newValue;
+                if (selectedItem.isExpanded()) {
+                    for (File f : new File(selectedItem.getValue()).listFiles()) {
+                        TreeItem<String> item = new TreeItem<String>(f.getPath());
+                        ImageView folder1 = new ImageView();
+                        try {
+                            folder1.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                            getResource("images/purple-folder-icon-9 (1).png").toURI().toURL()),
+                                    null));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                        ImageView file = new ImageView();
+                        try {
+                            file.setImage(SwingFXUtils.toFXImage(ImageIO.read(getClass().getClassLoader().
+                                            getResource("images/files (1).png").toURI().toURL()),
+                                    null));
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                        if (f.isDirectory()) {
+                            item.setExpanded(true);
+                            item.setGraphic(folder1);
+                        } else {
+                            item.setExpanded(false);
+                            item.setGraphic(file);
+                        }
+
+                        selectedItem.getChildren().add(item);
+
+                    }
+                }
+            }
+        });
+
+        fullTreeViewTab2.getSelectionModel().getSelectedItems().addListener(new ListChangeListener<TreeItem>() {
+            @Override
+            public void onChanged(Change<? extends TreeItem> change) {
+                ObservableList<TreeItem<String>> selectedItems = fullTreeViewTab2.getSelectionModel().getSelectedItems();
+                String s = selectedItems.get(0).toString();
+                s = removeByIndex(s, 0, 18);
+                s = removeByIndex(s, s.length() - 2, s.length());
+                filePathOfUploadFile = s;
+            }
+        });
+//            }
+//        });
+
+//        initClientTreeView.start();
+//        initServerTreeView.start();
         logTab1BebView.getEngine().setUserStyleSheetLocation(getClass().getClassLoader().getResource("styles/htmlStyle.css").toString());
         logWebviewTab2.getEngine().setUserStyleSheetLocation(getClass().getClassLoader().getResource("styles/htmlStyle.css").toString());
 

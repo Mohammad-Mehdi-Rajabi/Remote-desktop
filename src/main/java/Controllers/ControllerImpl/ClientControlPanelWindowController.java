@@ -2,6 +2,7 @@ package Controllers.ControllerImpl;
 
 import Controllers.Controller;
 import Core.File.ByteOfFile.ByteOfFile;
+import Core.File.FileList.FileList;
 import Core.KeyBoard.KeyBoard.Keyboard;
 import Core.Manager.Client.ManagedClientStatic.ManagedClient;
 import Core.Manager.ServerType.ServerType;
@@ -109,7 +110,7 @@ public class ClientControlPanelWindowController implements Initializable, Contro
                             if (massage.getMassage().equals(Massage.MassageType.GET_ROOT_OF_FILES.getMassage())) {
                                 objectOutputStream.writeObject(new Massage(Massage.MassageType.SENDING_ROOT_OF_FILES));
                                 objectOutputStream.flush();
-                                objectOutputStream.writeObject(File.listRoots());
+                                objectOutputStream.writeObject(new FileList(File.listRoots()));
                                 objectOutputStream.flush();
                             } else if (massage.getMassage().equals(Massage.MassageType.FILE_DOWNLOAD_REQUEST.getMassage())) {
                                 String path = massage.getPath();
@@ -150,6 +151,11 @@ public class ClientControlPanelWindowController implements Initializable, Contro
                                     objectOutputStream.writeObject(new Massage(Massage.MassageType.FILE_UPLOADED_SUCCESSFULLY));
                                     objectOutputStream.flush();
                                 }
+                            } else if (massage.getMassage().equals(Massage.MassageType.GET_FILES.getMassage())) {
+                                objectOutputStream.writeObject(new Massage(Massage.MassageType.SENDING_FILES));
+                                objectOutputStream.flush();
+                                objectOutputStream.writeObject(new FileList(new File(massage.getPath()).listFiles()));
+                                objectOutputStream.flush();
                             }
                         } catch (IOException e) {
                             e.printStackTrace();

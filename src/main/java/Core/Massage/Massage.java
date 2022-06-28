@@ -11,6 +11,8 @@ public class Massage implements Serializable {
 
     public enum MassageType {
         VALID_PASSWORD("valid_password"),
+        GET_FILES("get_files"),
+        SENDING_FILES("sending_files"),
         FILE_UPLOADED_SUCCESSFULLY("file_uploaded_successfully"),
         SENDING_ROOT_OF_FILES("sending_root_of_files"),
         FILE_DOWNLOAD_REQUEST("file_download_request"),

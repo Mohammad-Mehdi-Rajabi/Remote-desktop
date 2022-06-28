@@ -150,21 +150,13 @@ public class SetUpClientWindowController implements Initializable, Controller {
                     new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream objectOutputStream =
                     new ObjectOutputStream(socket.getOutputStream());
-                ManagedServer managedServer = (ManagedServer) objectInputStream.readObject();
-                if (managedServer.getEspecialIpsList().size() > 0) {
-                    for (IP ip : managedServer.getEspecialIpsList()) {
-                        if (Util.getSystemIP().equals(ip.getIP()) && passwordTxt.getText().equals(ip.getPassword())) {
-                            objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
-                            Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
-                                    "Control Panel", false);
-                            socket.close();
-                        } else {
-
-                        }
-                    }
-                } else {
-                    if (passwordTxt.getText().equals(managedServer.getDefaultPassword())) {
+            ManagedServer managedServer = (ManagedServer) objectInputStream.readObject();
+            if (managedServer.getEspecialIpsList().size() > 0) {
+                for (IP ip : managedServer.getEspecialIpsList()) {
+                    System.out.println(Util.getSystemIP());
+                    if (Util.getSystemIP().equals(ip.getIPString()) && passwordTxt.getText().equals(ip.getPasswordString())) {
                         objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
+                        objectOutputStream.flush();
                         Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
                                 "Control Panel", false);
                         socket.close();
@@ -172,6 +164,16 @@ public class SetUpClientWindowController implements Initializable, Controller {
 
                     }
                 }
+            } else {
+                if (passwordTxt.getText().equals(managedServer.getDefaultPassword())) {
+                    objectOutputStream.writeObject(new Massage(Massage.MassageType.VALID_PASSWORD));
+                    Util.switchWindow(getClass().getClassLoader().getResource("views/ClientControlPanelWindow.fxml"),
+                            "Control Panel", false);
+                    socket.close();
+                } else {
+
+                }
+            }
         } catch (IOException e) {
             //TODO something
             e.printStackTrace();

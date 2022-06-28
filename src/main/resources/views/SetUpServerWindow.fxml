@@ -108,6 +108,7 @@
             <String fx:value="redButton" />
             <String fx:value="redButtonHover" />
          </styleClass></Button>
+      <CheckBox fx:id="randomPassCheckBox" layoutX="417.0" layoutY="74.0" mnemonicParsing="false" onMouseClicked="#onClickRandomPassCheckBox" text="generate random password" />
 
     </children>
 </AnchorPane>

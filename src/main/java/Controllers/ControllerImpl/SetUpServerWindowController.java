@@ -71,6 +71,8 @@ public class SetUpServerWindowController implements Initializable, Controller {
     public Label keyBoardPortLbl;
     @FXML
     public Label dataTransferPortLbl;
+    @FXML
+    public CheckBox randomPassCheckBox;
 
     TableColumn<IP, String> tableColumnIP;
     TableColumn<IP, String> tableColumnPassword;
@@ -367,9 +369,7 @@ public class SetUpServerWindowController implements Initializable, Controller {
             //TODO something
         }
         ManagedServer.setDefaultPassword(passwordTxt.getText());
-        Util.switchWindow(getClass().getClassLoader().getResource("views/ServerControlPanelWindow.fxml"),
-                "Control panel",false);
-        shareScreenWindowStage = Util.openWindowWithReturnValue(getClass().getClassLoader().getResource("views/ShareScreenWindow.fxml"),
+        shareScreenWindowStage = Util.switchWindowWithReturnValue(getClass().getClassLoader().getResource("views/ShareScreenWindow.fxml"),
                 "Screen", true);
         shareScreenWindowStage.getScene().setOnKeyReleased(ShareScreenWindowController::onKeyReleasedScene);
         shareScreenWindowStage.getScene().setOnKeyPressed(ShareScreenWindowController::onKeyPressedScene);
@@ -398,6 +398,12 @@ public class SetUpServerWindowController implements Initializable, Controller {
     }
 
 
-
+    public void onClickRandomPassCheckBox(MouseEvent mouseEvent) {
+        if(randomPassCheckBox.isSelected()){
+            passwordTxt.setText( String.valueOf((long) (Math.random()*(100000000l-1000000l+1)+1000000l)));
+        }else {
+            passwordTxt.setText("");
+        }
+    }
 }
 

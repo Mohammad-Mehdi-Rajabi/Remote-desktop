@@ -2,20 +2,30 @@ package Controllers.ControllerImpl;
 
 
 import Controllers.Controller;
+import Core.Image.ByteOfImage.ByteOfImage;
 import Core.KeyBoard.KeyBoard.KeyboardImpl.KeyPressed;
 import Core.KeyBoard.KeyBoard.KeyboardImpl.KeyReleased;
 import Core.KeyBoard.KeyBoardUtil.JavaFxKeyCodeRewrite;
 import Core.Manager.Server.ManagedServerStatic.ManagedServer;
 import Core.Manager.ServerType.ServerType;
+import Core.Massage.Massage;
 import Core.Mouse.Mouse.MouseImpl.*;
+import Core.Util.Util;
+import javafx.animation.AnimationTimer;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Cursor;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -27,7 +37,10 @@ public class ShareScreenWindowController implements Initializable, Controller {
     @FXML
     public ImageView screenImageView;
     @FXML
-    public BorderPane borderPane;
+    public AnchorPane borderPane;
+    @FXML
+    public MenuItem openDataTransfer;
+
 
     public static ServerSocket mouseServerSocket;
     public static Socket mouseSocket;
@@ -38,11 +51,16 @@ public class ShareScreenWindowController implements Initializable, Controller {
     public static Socket keyBoardSocket;
     public static boolean keyBoardConnected;
     public static ObjectOutputStream keyBoardObjectOutputStream;
+    //-----------
+    private static AnimationTimer screenAnimation;
+    private static ServerSocket dataServer;
+    private static Thread thread;
 
     static {
         mouseConnected = false;
         keyBoardConnected = false;
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -82,7 +100,67 @@ public class ShareScreenWindowController implements Initializable, Controller {
 
             }
         }).start();
+//------------------------------------
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    dataServer = new ServerSocket(ManagedServer.getServers().get(ServerType.DATA_TRANSFER_SERVER).getPort());
+                    Socket accept = dataServer.accept();
+                    ObjectOutputStream objectOutputStream =
+                            new ObjectOutputStream(accept.getOutputStream());
+                    ObjectInputStream objectInputStream =
+                            new ObjectInputStream(accept.getInputStream());
+                    objectOutputStream.writeObject(new Core.Manager.Server.ManagedServerNonStatic.ManagedServer());
+                    objectOutputStream.flush();
 
+                    while (true) {
+                        Massage massage = (Massage) objectInputStream.readObject();
+                        if (massage.getMassage().equals(Massage.MassageType.VALID_PASSWORD.getMassage())) {
+                            try {
+                                screenAnimation = new AnimationTimer() {
+                                    ServerSocket serverSocket = new ServerSocket(ManagedServer.getServers().get(ServerType.SCREEN_SERVER).getPort());
+                                    Socket socket = null;
+                                    ObjectInputStream objectInputStream = null;
+                                    ByteOfImage byteOfImage = null;
+
+                                    @Override
+                                    public void handle(long now) {
+                                        try {
+                                            socket = serverSocket.accept();
+                                            objectInputStream = new ObjectInputStream(socket.getInputStream());
+                                            byteOfImage = (ByteOfImage) objectInputStream.readObject();
+                                            imageView.setImage(
+                                                    SwingFXUtils.toFXImage(ImageIO.read(new ByteArrayInputStream(byteOfImage.getByteOfImage())),
+                                                            null)
+                                            );
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        } catch (ClassNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                };
+                                screenAnimation.start();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            dataServer.close();
+                            break;
+                        }
+
+                    }
+                    dataServer = new ServerSocket(ManagedServer.getServers().get(ServerType.DATA_TRANSFER_SERVER).getPort());
+                    ManagedServer.setDataTransferSocket(dataServer.accept());
+                } catch (IOException e) {
+                    //TODO something
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     public void onMouseEnteredImageView(MouseEvent mouseEvent) {
@@ -174,4 +252,8 @@ public class ShareScreenWindowController implements Initializable, Controller {
         }
     }
 
+    public void onActionOpenDataTransfer(ActionEvent actionEvent) {
+        Util.openWindow(getClass().getClassLoader().getResource("views/FileTransferWindow.fxml"),
+                "File Transfer", false);
+    }
 }

@@ -105,7 +105,7 @@ public class Util {
             main.stage.setTitle(title);
             main.stage.setScene(new Scene(root));
             main.stage.centerOnScreen();
-            main.stage.setAlwaysOnTop(true);
+            main.stage.setAlwaysOnTop(false);
         } catch (IOException e) {
             //TODO something
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class Util {
             stage2.setResizable(resizeable);
             stage2.setTitle(title);
             stage2.centerOnScreen();
-            stage2.setAlwaysOnTop(true);
+            stage2.setAlwaysOnTop(false);
             stage2.show();
         } catch (IOException e) {
             //TODO something
@@ -145,7 +145,7 @@ public class Util {
             main.stage.setTitle(title);
             main.stage.setScene(new Scene(root));
             main.stage.centerOnScreen();
-            main.stage.setAlwaysOnTop(true);
+            main.stage.setAlwaysOnTop(false);
         } catch (IOException e) {
             //TODO something
             e.printStackTrace();
@@ -162,7 +162,7 @@ public class Util {
             stage2.setResizable(resizeable);
             stage2.setTitle(title);
             stage2.centerOnScreen();
-            stage2.setAlwaysOnTop(true);
+            stage2.setAlwaysOnTop(false);
             stage2.show();
         } catch (IOException e) {
             //TODO something

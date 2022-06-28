@@ -50,4 +50,19 @@ public class IP implements Serializable {
         this.password.set(password);
     }
 
+    public String getIPString() {
+        return IPString;
+    }
+
+    public void setIPString(String IPString) {
+        this.IPString = IPString;
+    }
+
+    public String getPasswordString() {
+        return passwordString;
+    }
+
+    public void setPasswordString(String passwordString) {
+        this.passwordString = passwordString;
+    }
 }
