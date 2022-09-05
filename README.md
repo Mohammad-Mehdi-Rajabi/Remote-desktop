@@ -13,3 +13,7 @@ some abilities:
   4) auto local ip detector
   5) can control client pc with using server keyboard and mouse
   6) .....
+
+
+
+tip) -> some feature not completed yet
