@@ -1,10 +1,10 @@
 # Remote-desktop
 
 tools:
- java SE
- java FX
- CSS
- HTML
+ 1) java SE
+ 2) java FX
+ 3) CSS
+ 4) HTML
  
 some abilities:
   1) can transfer file between client and server
